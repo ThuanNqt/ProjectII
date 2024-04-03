@@ -23,11 +23,11 @@ export const index = async (req: Request, res: Response) => {
   const newProducts = products.map((product) => {
     const newProduct: IProduct = {
       ...product.toObject(), // Assuming that product is a mongoose document, we need to convert it to a plain object
-      newPrice: parseFloat(
+      newPrice: parseInt(
         (
           product.price -
           product.price * (product.discountPercentage / 100)
-        ).toFixed(2) // Fixed to two decimal places if needed
+        ).toFixed(0) // Fixed to two decimal places if needed
       ),
     };
     return newProduct;
