@@ -5,7 +5,12 @@ dotenv.config();
 import * as database from "./config/database";
 import route from "./routes/client/index.route";
 import routeAdmin from "./routes/admin/index.route";
+import methodOverride from "method-override";
 const port: number | string = process.env.PORT || 3000;
+
+// method override
+//method override
+app.use(methodOverride("_method"));
 
 //connect to database
 database.connect();

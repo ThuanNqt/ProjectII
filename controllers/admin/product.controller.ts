@@ -3,7 +3,9 @@ import Product from "../../models/product.model";
 import filterStatusHelper from "../../helpers/filterStatus";
 import searchHelper from "../../helpers/search";
 import pagination from "../../helpers/pagination";
+import Swal from "sweetalert2";
 
+// [GET] /admin/products
 export const index = async (req: Request, res: Response) => {
   interface IFind {
     deleted: boolean;
@@ -44,4 +46,17 @@ export const index = async (req: Request, res: Response) => {
     keyword: objSearch.keyword,
     pagination: objPagination,
   });
+};
+
+// [PATCH] /admin/products/change-status
+export const changeStatus = async (req: Request, res: Response) => {
+  try {
+    const status: string = req.params.status;
+    const id: string = req.params.id;
+    await Product.updateOne({ _id: id }, { status: status });
+  } catch (error) {
+    console.log(error);
+  }
+
+  res.redirect("back");
 };
