@@ -48,7 +48,7 @@ export const index = async (req: Request, res: Response) => {
   });
 };
 
-// [PATCH] /admin/products/change-status
+// [PATCH] /admin/products/change-status/:status/:id
 export const changeStatus = async (req: Request, res: Response) => {
   try {
     const status: string = req.params.status;
@@ -58,5 +58,21 @@ export const changeStatus = async (req: Request, res: Response) => {
     console.log(error);
   }
 
+  res.redirect("back");
+};
+
+// [DELETE] /admin/products/delete/:id
+export const deleteProduct = async (req: Request, res: Response) => {
+  try {
+    const id: string = req.params.id;
+    await Product.updateOne(
+      { _id: id },
+      { deleted: true, deletedAt: Date.now() }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+
+  //Trả về trang trước đó => đáp ứng việc thay đổi trạng thái sản phẩm mà không cần load lại trang
   res.redirect("back");
 };
