@@ -35,6 +35,7 @@ export const index = async (req: Request, res: Response) => {
   interface IFind {
     deleted: boolean;
     status?: string;
+    title?: RegExp;
   }
 
   const find: IFind = {
@@ -46,14 +47,20 @@ export const index = async (req: Request, res: Response) => {
     find.status = req.query.status.toString();
   }
 
-  console.log(req.query.status);
+  // Tìm kiếm sản phầm theo keyword
+  let keyword: string = "";
+  if (req.query.keyword) {
+    keyword = req.query.keyword.toString();
+    const regex = RegExp(keyword, "i"); //i là không phân biệt chữ hoa chữ thường, Tìm kiếm từ gần đúng (giống như tìm kiếm google)
+    find.title = regex;
+  }
 
   const products = await Product.find(find);
-  console.log(products);
 
   res.render("admin/pages/products/index.pug", {
     pageTitle: "Danh sách sản phẩm",
     products: products,
     filterStatus: filterStatus,
+    keyword: keyword,
   });
 };
