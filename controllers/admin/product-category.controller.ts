@@ -172,3 +172,36 @@ export const editPatch = async (req: Request, res: Response) => {
   }
   res.redirect("back");
 };
+
+// [GET] /admin/products-category/detail/:id
+export const detail = async (req: Request, res: Response) => {
+  try {
+    interface IFind {
+      deleted: boolean;
+      _id: string;
+    }
+
+    const id = req.params.id;
+
+    const find: IFind = {
+      deleted: false,
+      _id: id,
+    };
+
+    const productCategory = await ProductCategory.findOne(find);
+
+    // Phân cấp danh mục sản phẩm
+    const titleProductCategory = await ProductCategory.findOne({
+      deleted: false,
+      _id: productCategory.parent_id,
+    });
+
+    res.render(`admin/pages/products-category/detail`, {
+      pageTitle: productCategory.title,
+      productCategory: productCategory,
+      titleProductCategory: titleProductCategory,
+    });
+  } catch (error) {
+    res.redirect(`/admin/products-category`);
+  }
+};
