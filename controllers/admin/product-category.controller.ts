@@ -3,6 +3,7 @@ import filterStatusHelper from "../../helpers/filterStatus";
 import searchHelper from "../../helpers/search";
 import pagination from "../../helpers/pagination";
 import { Request, Response } from "express";
+import tree from "../../helpers/createTree";
 
 // [GET] /admin/products-category
 export const index = async (req: Request, res: Response) => {
@@ -34,14 +35,18 @@ export const index = async (req: Request, res: Response) => {
   const countProduct = await ProductCategory.countDocuments(find);
   const objPagination = pagination(req.query, countProduct);
 
-  const productCategories = await ProductCategory.find(find)
-    .sort({ position: "desc" })
-    .limit(objPagination.limitItems)
-    .skip(objPagination.skip);
+  const productCategories = await ProductCategory.find(find).sort({
+    position: "desc",
+  });
+  // .limit(objPagination.limitItems)
+  // .skip(objPagination.skip);
+
+  // Phân cấp danh mục sản phẩm
+  const newRecords = tree(productCategories);
 
   res.render("admin/pages/products-category/index", {
     pageTitle: "Danh mục sản phẩm",
-    records: productCategories,
+    records: newRecords,
     filterStatus: filterStatus,
     keyword: objSearch.keyword,
     pagination: objPagination,
@@ -50,8 +55,22 @@ export const index = async (req: Request, res: Response) => {
 
 // [GET] /admin/products-category/create
 export const create = async (req: Request, res: Response) => {
+  interface IFind {
+    deleted: boolean;
+  }
+
+  let find: IFind = {
+    deleted: false,
+  };
+
+  const records = await ProductCategory.find(find);
+
+  // Phân cấp danh mục sản phẩm
+  const newRecords = tree(records);
+
   res.render("admin/pages/products-category/create", {
     pageTitle: "Tạo danh mục sản phẩm",
+    records: newRecords,
   });
 };
 
