@@ -3,7 +3,6 @@ import Product from "../../models/product.model";
 import filterStatusHelper from "../../helpers/filterStatus";
 import searchHelper from "../../helpers/search";
 import pagination from "../../helpers/pagination";
-import Swal from "sweetalert2";
 
 // [GET] /admin/products
 export const index = async (req: Request, res: Response) => {
@@ -36,6 +35,7 @@ export const index = async (req: Request, res: Response) => {
   const objPagination = pagination(req.query, countProduct);
 
   const products = await Product.find(find)
+    .sort({ position: "desc" })
     .limit(objPagination.limitItems)
     .skip(objPagination.skip);
 
@@ -75,4 +75,33 @@ export const deleteProduct = async (req: Request, res: Response) => {
 
   //Trả về trang trước đó => đáp ứng việc thay đổi trạng thái sản phẩm mà không cần load lại trang
   res.redirect("back");
+};
+
+// [GET] /admin/products/create
+export const create = async (req: Request, res: Response) => {
+  res.render("admin/pages/products/create", {
+    pageTitle: "Thêm sản phẩm",
+  });
+};
+
+// [POST] /admin/products/create
+export const createPost = async (req: Request, res: Response) => {
+  try {
+    req.body.price = parseInt(req.body.price);
+    req.body.discountPercentage = parseInt(req.body.discountPercentage);
+    req.body.stock = parseInt(req.body.stock);
+
+    if (req.body.position === "") {
+      const countProduct = await Product.countDocuments();
+      req.body.position = countProduct + 1;
+    } else {
+      req.body.position = parseInt(req.body.position);
+    }
+
+    const product = new Product(req.body);
+    await product.save();
+  } catch (error) {
+    console.log(error);
+  }
+  res.redirect("/admin/products");
 };

@@ -6,10 +6,15 @@ import * as database from "./config/database";
 import route from "./routes/client/index.route";
 import routeAdmin from "./routes/admin/index.route";
 import methodOverride from "method-override";
+import bodyParser from "body-parser";
 const port: number | string = process.env.PORT || 3000;
 
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+// parse application/json
+app.use(bodyParser.json());
+
 // method override
-//method override
 app.use(methodOverride("_method"));
 
 //connect to database

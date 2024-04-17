@@ -18,7 +18,7 @@ export const index = async (req: Request, res: Response) => {
   const products = await Product.find({
     status: "active",
     deleted: false,
-  });
+  }).sort({ position: "desc" });
 
   const newProducts = products.map((product) => {
     const newProduct: IProduct = {
