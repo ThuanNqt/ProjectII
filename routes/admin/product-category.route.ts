@@ -19,6 +19,16 @@ router.post(
   controller.createPost
 );
 
+//Route update product-category
+router.get("/edit/:id", controller.edit);
+router.patch(
+  "/edit/:id",
+  upload.single("thumbnail"),
+  uploadCloud.upload,
+  validate.createPost,
+  controller.editPatch
+);
+
 // Truyền data động thì có : ở trước tên biến
 router.patch("/change-status/:status/:id", controller.changeStatus);
 

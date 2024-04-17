@@ -129,3 +129,46 @@ export const deleteItem = async (req: Request, res: Response) => {
   //Trả về trang trước đó => đáp ứng việc thay đổi trạng thái sản phẩm mà không cần load lại trang
   res.redirect("back");
 };
+
+// [GET] /admin/products-category/edit/:id
+export const edit = async (req: Request, res: Response) => {
+  try {
+    interface IFind {
+      deleted: boolean;
+      _id: string;
+    }
+
+    const id: string = req.params.id;
+
+    const find: IFind = {
+      deleted: false,
+      _id: id,
+    };
+
+    const productCategory = await ProductCategory.findOne(find);
+
+    // Phân cấp danh mục sản phẩm
+    const records = await ProductCategory.find({ deleted: false });
+    const newRecords = tree(records);
+
+    res.render(`admin/pages/products-category/edit`, {
+      pageTitle: "Chỉnh sửa sản phẩm",
+      data: productCategory,
+      records: newRecords,
+    });
+  } catch (error) {
+    res.redirect(`/admin/products-category`);
+  }
+};
+
+// [PATCH] /admin/products-category/edit/:id
+export const editPatch = async (req: Request, res: Response) => {
+  req.body.position = parseInt(req.body.position);
+
+  try {
+    await ProductCategory.updateOne({ _id: req.params.id }, req.body);
+  } catch (error) {
+    console.log(error);
+  }
+  res.redirect("back");
+};
