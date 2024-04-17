@@ -8,7 +8,7 @@ block main
     .row
       .col-md-4
         if(product.thumbnail)
-          img.img-thumbnail(src=product.thumbnail alt='Product Image' style="border: 1px solid #ddd")
+          img.img-thumbnail(src=product.thumbnail alt='Product Image' style="width: 100%; max-width: 300px; height: auto; border: 1px solid #ddd")
 
       .col-md-8
         if(product.price)
