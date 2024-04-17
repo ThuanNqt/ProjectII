@@ -98,6 +98,11 @@ export const createPost = async (req: Request, res: Response) => {
       req.body.position = parseInt(req.body.position);
     }
 
+    //Upload thumbnail
+    // if (req.file) {
+    //   req.body.thumbnail = `uploads/${req.file.filename}`;
+    // }
+
     const product = new Product(req.body);
     await product.save();
   } catch (error) {

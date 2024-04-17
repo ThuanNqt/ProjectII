@@ -6,6 +6,7 @@ block main
   form(
     action="/admin/products/create"
     method="POST"
+    enctype="multipart/form-data"
   )
     //-  Khi gửi cho bên BE thì ta nhận được (name - value của input)
     div(class="form-group")
@@ -63,10 +64,11 @@ block main
     div(class="form-group")
       label(for="thumbnail") Ảnh
       input(
-        type="text"
-        class="form-control"
+        type="file"
+        class="form-control-file"
         id="thumbnail"
         name="thumbnail"
+        accept="image/*"
       )
 
     div(class="form-group")
