@@ -1,0 +1,32 @@
+extends ../../layouts/default.pug
+
+block main
+  .container.mt-4
+    if(product.title)
+      h1.mb-4 #{product.title}
+
+    .row
+      .col-md-4
+        if(product.thumbnail)
+          img.img-thumbnail(src=product.thumbnail alt='Product Image' style="border: 1px solid #ddd")
+
+      .col-md-8
+        if(product.price)
+          p Giá:
+            span.font-weight-bold #{product.price}
+
+        if(product.discountPercentage)
+          p Giảm giá:
+            span.font-weight-bold #{product.discountPercentage}%
+
+        if(product.stock)
+          p Số lượng:
+            span.font-weight-bold #{product.stock}
+
+        if(product.position)
+          p Vị trí:
+            span.font-weight-bold #{product.position}
+
+        if(product.description)
+          p Mô tả:
+            i #{product.description}

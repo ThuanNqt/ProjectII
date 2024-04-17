@@ -4,9 +4,9 @@ import streamifier from "streamifier";
 
 // Configure cloudinary
 cloudinary.v2.config({
-  cloud_name: "dyxycz0xe",
-  api_key: "188182885992526",
-  api_secret: "gDtvEMWDtPxRga5jJVqNzhgWOdM",
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
 });
 
 type UploadStreamFunction = (req: Request) => Promise<any>;

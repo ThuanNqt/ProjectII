@@ -110,3 +110,68 @@ export const createPost = async (req: Request, res: Response) => {
   }
   res.redirect("/admin/products");
 };
+
+// [GET] /admin/products/edit/:id
+export const edit = async (req: Request, res: Response) => {
+  try {
+    interface IFind {
+      deleted: boolean;
+      _id: string;
+    }
+
+    const id: string = req.params.id;
+    const find: IFind = {
+      deleted: false,
+      _id: id,
+    };
+
+    const product = await Product.findOne(find);
+
+    res.render("admin/pages/products/edit", {
+      pageTitle: "Chỉnh sửa sản phẩm",
+      product: product,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// [PATCH] /admin/products/edit/:id
+export const editPatch = async (req: Request, res: Response) => {
+  try {
+    req.body.price = parseInt(req.body.price);
+    req.body.stock = parseInt(req.body.stock);
+    req.body.discountPercentage = parseInt(req.body.discountPercentage);
+    req.body.position = parseInt(req.body.position);
+
+    await Product.updateOne({ _id: req.params.id }, req.body);
+  } catch (error) {
+    console.log(error);
+  }
+  res.redirect("back");
+};
+
+// [GET] /admin/products/detail/:id
+export const detail = async (req: Request, res: Response) => {
+  try {
+    interface IFind {
+      deleted: boolean;
+      _id: string;
+    }
+
+    const id: string = req.params.id;
+    const find: IFind = {
+      deleted: false,
+      _id: id,
+    };
+
+    const product = await Product.findOne(find);
+
+    res.render("admin/pages/products/detail", {
+      pageTitle: product.title,
+      product: product,
+    });
+  } catch (error) {
+    res.redirect("/admin/products");
+  }
+};
