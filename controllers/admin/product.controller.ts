@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
 import Product from "../../models/product.model";
+import ProductCategory from "../../models/product-category.model";
 import filterStatusHelper from "../../helpers/filterStatus";
 import searchHelper from "../../helpers/search";
 import pagination from "../../helpers/pagination";
+import tree from "../../helpers/createTree";
 
 // [GET] /admin/products
 export const index = async (req: Request, res: Response) => {
@@ -79,8 +81,21 @@ export const deleteProduct = async (req: Request, res: Response) => {
 
 // [GET] /admin/products/create
 export const create = async (req: Request, res: Response) => {
+  interface IFind {
+    deleted: boolean;
+  }
+
+  let find: IFind = {
+    deleted: false,
+  };
+
+  const category = await ProductCategory.find(find);
+
+  const newCategory = tree(category);
+
   res.render("admin/pages/products/create", {
     pageTitle: "Thêm sản phẩm",
+    category: newCategory,
   });
 };
 
@@ -127,9 +142,14 @@ export const edit = async (req: Request, res: Response) => {
 
     const product = await Product.findOne(find);
 
+    //Lấy ra danh mục sản phẩm
+    const category = await ProductCategory.find({ deleted: false });
+    const newCategory = tree(category);
+
     res.render("admin/pages/products/edit", {
       pageTitle: "Chỉnh sửa sản phẩm",
       product: product,
+      category: newCategory,
     });
   } catch (error) {
     console.log(error);
