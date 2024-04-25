@@ -97,3 +97,38 @@ export const editPatch = async (req: Request, res: Response) => {
     req.flash("error", `Cập nhật thất bại!`);
   }
 };
+
+// [GET] /admin/roles/permissions
+export const permissions = async (req: Request, res: Response) => {
+  try {
+    interface IFind {
+      deleted: boolean;
+    }
+    const find: IFind = {
+      deleted: false,
+    };
+
+    const records = await Role.find(find);
+
+    res.render("admin/pages/roles/permissions", {
+      pageTitle: "Trang phân quyền",
+      records: records,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// [PATCH] /admin/roles/permissions
+export const permissionsPatch = async (req, res) => {
+  try {
+    const permissions = JSON.parse(req.body.permissions); // convert JSON to JS
+    for (const item of permissions) {
+      await Role.updateOne({ _id: item.id }, { permissions: item.permissions });
+    }
+    req.flash("success", "Cập nhật thành công!");
+  } catch (error) {
+    req.flash("error", "Cập nhật thất bại!");
+  }
+  res.redirect("back");
+};

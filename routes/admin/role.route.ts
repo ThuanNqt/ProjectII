@@ -17,4 +17,9 @@ router.patch("/edit/:id", controller.editPatch);
 // Route create
 router.get("/create", controller.create);
 router.post("/create", controller.createPost);
+
+//Route permissions
+router.get("/permissions", controller.permissions);
+router.patch("/permissions", controller.permissionsPatch);
+
 export const roleRoutes: Router = router;
