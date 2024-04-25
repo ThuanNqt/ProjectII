@@ -1,0 +1,14 @@
+extends ../../layouts/default.pug
+
+block main
+  if(role.title)
+    h1(class="mb-4") #{role.title}
+
+  if(role.description)
+    p !{role.description}
+  a(
+    class="btn btn-warning"
+    href=`/admin/roles/edit/${role.id}`
+  ) Chỉnh sửa
+
+  script(src="/admin/js/roles.js")

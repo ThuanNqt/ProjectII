@@ -95,8 +95,9 @@ export const createPost = async (req: Request, res: Response) => {
 
     const productCategory = new ProductCategory(req.body);
     await productCategory.save();
+    req.flash("success", `Tạo danh mục thành công!`);
   } catch (error) {
-    console.log(error);
+    req.flash("error", `Tạo danh mục thất bại!`);
   }
   res.redirect("/admin/products-category");
 };
@@ -107,8 +108,9 @@ export const changeStatus = async (req: Request, res: Response) => {
     const status: string = req.params.status;
     const id: string = req.params.id;
     await ProductCategory.updateOne({ _id: id }, { status: status });
+    req.flash("success", `Thay đổi trạng thái thành công!`);
   } catch (error) {
-    console.log(error);
+    req.flash("error", `Thay đổi trạng thái thất bại!`);
   }
 
   res.redirect("back");
@@ -122,8 +124,9 @@ export const deleteItem = async (req: Request, res: Response) => {
       { _id: id },
       { deleted: true, deletedAt: Date.now() }
     );
+    req.flash("success", `Xóa danh mục thành công!`);
   } catch (error) {
-    console.log(error);
+    req.flash("error", `Xóa danh mục thất bại!`);
   }
 
   //Trả về trang trước đó => đáp ứng việc thay đổi trạng thái sản phẩm mà không cần load lại trang
@@ -167,10 +170,11 @@ export const editPatch = async (req: Request, res: Response) => {
 
   try {
     await ProductCategory.updateOne({ _id: req.params.id }, req.body);
+    req.flash("success", `Cập nhật thành công!`);
   } catch (error) {
-    console.log(error);
+    req.flash("success", `Cập nhật thất bại!`);
   }
-  res.redirect("back");
+  res.redirect("/admin/products-category");
 };
 
 // [GET] /admin/products-category/detail/:id

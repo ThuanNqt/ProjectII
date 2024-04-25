@@ -1,5 +1,4 @@
 import express, { Express } from "express";
-const app: Express = express();
 import dotenv from "dotenv";
 dotenv.config();
 import * as database from "./config/database";
@@ -8,6 +7,23 @@ import routeAdmin from "./routes/admin/index.route";
 import methodOverride from "method-override";
 import bodyParser from "body-parser";
 const port: number | string = process.env.PORT || 3000;
+
+import flash from "express-flash";
+import cookieParser from "cookie-parser";
+import session from "express-session";
+const app: Express = express();
+
+//Connect flash notification
+app.use(cookieParser("KeyRandom"));
+app.use(
+  session({
+    secret: "YourSecretKey", // Thêm thuộc tính secret
+    cookie: { maxAge: 60000 },
+    resave: false, // Thêm để tránh lỗi cảnh báo
+    saveUninitialized: true, // Thêm để tránh lỗi cảnh báo
+  })
+);
+app.use(flash());
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));

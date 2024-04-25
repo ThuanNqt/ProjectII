@@ -56,8 +56,9 @@ export const changeStatus = async (req: Request, res: Response) => {
     const status: string = req.params.status;
     const id: string = req.params.id;
     await Product.updateOne({ _id: id }, { status: status });
+    req.flash("success", "Cập nhật trạng thái thành công!");
   } catch (error) {
-    console.log(error);
+    req.flash("error", "Cập nhật trạng thái thất bại!");
   }
 
   res.redirect("back");
@@ -71,8 +72,9 @@ export const deleteProduct = async (req: Request, res: Response) => {
       { _id: id },
       { deleted: true, deletedAt: Date.now() }
     );
+    req.flash("success", "Xóa sản phẩm thành công!");
   } catch (error) {
-    console.log(error);
+    req.flash("success", "Xóa sản phẩm thất bại!");
   }
 
   //Trả về trang trước đó => đáp ứng việc thay đổi trạng thái sản phẩm mà không cần load lại trang
@@ -120,8 +122,9 @@ export const createPost = async (req: Request, res: Response) => {
 
     const product = new Product(req.body);
     await product.save();
+    req.flash("success", `Tạo sản phẩm thành công!`);
   } catch (error) {
-    console.log(error);
+    req.flash("success", `Tạo sản phẩm thất bại!`);
   }
   res.redirect("/admin/products");
 };
@@ -165,10 +168,11 @@ export const editPatch = async (req: Request, res: Response) => {
     req.body.position = parseInt(req.body.position);
 
     await Product.updateOne({ _id: req.params.id }, req.body);
+    req.flash("success", `Cập nhật sản phẩm thành công!`);
   } catch (error) {
-    console.log(error);
+    req.flash("success", `Cập nhật sản phẩm thất bại!`);
   }
-  res.redirect("back");
+  res.redirect("/admin/products");
 };
 
 // [GET] /admin/products/detail/:id
