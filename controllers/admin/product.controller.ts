@@ -32,12 +32,30 @@ export const index = async (req: Request, res: Response) => {
     find.title = objSearch.regex;
   }
 
+  // Sort
+  interface ISort {
+    [sortKey: string]: string;
+    position?: string;
+  }
+  const sort: ISort = {};
+  if (
+    typeof req.query.sortKey === "string" &&
+    typeof req.query.sortValue === "string"
+  ) {
+    const sortKey: string = req.query.sortKey;
+    const sortValue: string = req.query.sortValue;
+    sort[sortKey] = sortValue;
+  } else {
+    sort.position = "desc";
+  }
+  // End sort
+
   // Pagination
   const countProduct = await Product.countDocuments(find);
   const objPagination = pagination(req.query, countProduct);
 
   const products = await Product.find(find)
-    .sort({ position: "desc" })
+    .sort(sort as any)
     .limit(objPagination.limitItems)
     .skip(objPagination.skip);
 

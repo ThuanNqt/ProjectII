@@ -12,6 +12,13 @@ import flash from "express-flash";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 const app: Express = express();
+const path = require("path");
+
+// config tinymce
+app.use(
+  "/tinymce",
+  express.static(path.join(__dirname, "node_modules", "tinymce"))
+);
 
 //Connect flash notification
 app.use(cookieParser("KeyRandom"));
