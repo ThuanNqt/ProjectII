@@ -7,4 +7,7 @@ router.get("/login", controller.login);
 
 router.post("/login", validate.loginPost, controller.loginPost);
 
+// Route logout
+router.get("/logout", controller.logout);
+
 export const authRoutes: Router = router;
