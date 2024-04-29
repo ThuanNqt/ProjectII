@@ -24,3 +24,22 @@ export const createPost = async (
   }
   next();
 };
+
+export const editPatch = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (!req.body.fullName) {
+    req.flash("error", "Tên không được để trống");
+    res.redirect("back");
+    return;
+  }
+
+  if (!req.body.email) {
+    req.flash("error", "Email không được để trống");
+    res.redirect("back");
+    return;
+  }
+  next();
+};

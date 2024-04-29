@@ -4,12 +4,13 @@ include ../../mixins/alert.pug
 block main
   +alert-error(2000)
   +alert-success(2000)
-  h1(class="mb-4") Thêm mới tài khoản
+
+  h1(class="mb-4") Chỉnh sửa tài khoản
 
   if(roles)
     form(
-      action=`/admin/accounts/create`
-      method="POST"
+      action=`/admin/accounts/edit/${account.id}?_method=PATCH`
+      method="post"
       enctype="multipart/form-data"
     )
       div(class="form-group")
@@ -20,6 +21,7 @@ block main
           id="fullName"
           name="fullName"
           required
+          value=account.fullName
         )
 
       div(class="form-group")
@@ -30,16 +32,18 @@ block main
           id="email"
           name="email"
           required
+          value=account.email
         )
 
       div(class="form-group")
-        label(for="password") Mật khẩu *
+        label(for="password") Mật khẩu
         input(
-          type="password"
+          type="text"
           class="form-control"
           id="password"
           name="password"
           required
+          value=account.password
         )
 
       div(class="form-group")
@@ -49,6 +53,7 @@ block main
           class="form-control"
           id="phone"
           name="phone"
+          value=account.phone
         )
 
       div(
@@ -70,7 +75,7 @@ block main
           close-image-preview
         ) x
         img(
-          src=""
+          src=account.avatar
           upload-image-preview
           class="image-preview"
           )
@@ -84,7 +89,10 @@ block main
         )
           option(disabled) -- Chọn quyền --
           each item in roles
-            option(value=item.id) #{item.title}
+            option(
+              value=item.id
+              selected=item.id === account.role_id
+              ) #{item.title}
 
       div(class="form-group form-check form-check-inline")
         input(
@@ -93,7 +101,7 @@ block main
           id="statusActive"
           name="status"
           value="active"
-          checked
+          checked=(account.status === "active"? true : false)
         )
         label(for="statusActive" class="form-check-label") Hoạt động
 
@@ -104,7 +112,7 @@ block main
           id="statusInActive"
           name="status"
           value="inactive"
-          checked
+          checked=(account.status === "inactive"? true : false)
         )
         label(for="statusInActive" class="form-check-label") Dừng hoạt động
 
@@ -112,15 +120,16 @@ block main
         button(
           type="submit"
           class="btn btn-primary"
-        ) Tạo mới
+        ) Cập nhật
 
   else
-    p Vui lòng tạo nhóm quyền trước khi tạo tài khoản
+    p Vui lòng tạo nhóm quyền trước khi chỉnh sửa tài khoản
     p
       a(
         href=`/admin/roles/create`
         class="btn btn-secondary"
       ) Tạo nhóm quyền
+
 
   script(src="/admin/js/script.js")
   script(src="/admin/js/account.js")

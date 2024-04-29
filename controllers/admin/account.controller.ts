@@ -5,6 +5,7 @@ import { Request, Response } from "express";
 
 interface IFind {
   deleted: boolean;
+  _id?: string;
 }
 
 interface IAccount {
@@ -89,10 +90,124 @@ export const createPost = async (req: Request, res: Response) => {
 
       const record = new Account(req.body);
       await record.save();
+
       req.flash("success", "Tạo tài khoản thành công");
     }
   } catch (error) {
     req.flash("error", "Tạo tài khoản thất bại");
   }
   res.redirect(`/admin/accounts`);
+};
+
+//[DELETE] /admin/accounts/delete/:id
+export const deleteAccount = async (req: Request, res: Response) => {
+  try {
+    const id: string = req.params.id;
+
+    await Account.updateOne(
+      { _id: id },
+      { deleted: true, deletedAt: Date.now() }
+    );
+
+    req.flash("success", `Xóa tài khoản thành công!`);
+  } catch (error) {
+    req.flash("error", `Xóa tài khoản thất bại!`);
+  }
+
+  res.redirect("back");
+};
+
+// [PATCH] /admin/accounts/change-status/:status/:id
+export const changeStatus = async (req: Request, res: Response) => {
+  try {
+    const status: string = req.params.status;
+    const id: string = req.params.id;
+
+    await Account.updateOne({ _id: id }, { status: status });
+
+    req.flash("success", "Cập nhật trạng thái tài khoản thành công!");
+  } catch (error) {
+    req.flash("error", "Cập nhật trạng thái tài khoản thất bại!");
+  }
+
+  res.redirect("back");
+};
+
+// [GET] /admin/accounts/detail/:id
+export const detail = async (req: Request, res: Response) => {
+  try {
+    const find: IFind = {
+      deleted: false,
+      _id: req.params.id,
+    };
+
+    const record: IAccount = await Account.findOne(find).select(
+      "-password -token"
+    );
+
+    // Lấy role của account thay vì in ra role_id thì ta in ra role.title
+    let role: IRole = await Role.findOne({
+      _id: record.role_id,
+      deleted: false,
+    });
+
+    record.role = role;
+    // End lấy role của account
+
+    res.render(`admin/pages/accounts/detail`, {
+      pageTitle: record.fullName,
+      record: record,
+    });
+  } catch (error) {
+    res.redirect(`/admin/accounts`);
+  }
+};
+
+// [GET] /admin/accounts/edit/:id
+export const edit = async (req: Request, res: Response) => {
+  try {
+    const find: IFind = {
+      deleted: false,
+      _id: req.params.id,
+    };
+
+    const account: IAccount = await Account.findOne(find);
+
+    const roles: IRole[] = await Role.find({ deleted: false });
+
+    res.render(`admin/pages/accounts/edit`, {
+      pageTitle: "Chỉnh sửa tài khoản",
+      account: account,
+      roles: roles,
+    });
+  } catch (error) {
+    res.redirect(`/admin/accounts`);
+  }
+};
+
+// [PATCH] /admin/products/edit/:id
+export const editPatch = async (req: Request, res: Response) => {
+  try {
+    const emailExist = await Account.findOne({
+      email: req.body.email,
+      deleted: false,
+      _id: { $ne: req.params.id }, // Không kiểm tra email của chính record đang sửa
+    });
+
+    if (emailExist) {
+      req.flash("error", `Email ${req.body.email} đã tồn tại`);
+      res.redirect("back");
+      return;
+    } else {
+      if (req.body.password) {
+        req.body.password = md5(req.body.password);
+      }
+      await Account.updateOne({ _id: req.params.id }, req.body);
+      req.flash("success", "Cập nhật tài khoản thành công!");
+    }
+  } catch (error) {
+    req.flash("error", "Cập nhật tài khoản thất bại!");
+    res.redirect(`/admin/accounts`);
+  }
+  res.redirect("back");
 };

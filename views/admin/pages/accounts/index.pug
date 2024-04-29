@@ -77,5 +77,19 @@ block main
                     button-delete
                     data-id=account.id
                     ) Xóa
+  form(
+    action=""
+    method="POST"
+    id="form-delete-item"
+    path=`/admin/accounts/delete`
+  )
+
+  form(
+    action=""
+    method="POST"
+    id="form-change-status"
+    path=`/admin/accounts/change-status`
+  )
 
   script(src="/admin/js/script.js")
+  script(src="/admin/js/account.js")

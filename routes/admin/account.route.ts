@@ -18,4 +18,24 @@ router.post(
   controller.createPost
 );
 
+// Router delete
+router.delete("/delete/:id", controller.deleteAccount);
+
+// Route change status
+// Truyền data động thì có : ở trước tên biến
+router.patch("/change-status/:status/:id", controller.changeStatus);
+
+//[GET] /admin/accounts/detail/:id
+router.get("/detail/:id", controller.detail);
+
+//Route update account
+router.get("/edit/:id", controller.edit);
+router.patch(
+  "/edit/:id",
+  upload.single("avatar"),
+  uploadCloud.upload,
+  validate.editPatch,
+  controller.editPatch
+);
+
 export const accountRoutes: Router = router;
