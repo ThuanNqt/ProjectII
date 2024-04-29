@@ -147,7 +147,7 @@
 }
 
 [show-alert] [close-alert] {
-  background: #ffffffc4;
+  /* background: #ffffffc4; */
   display: inline-block;
   width: 24px;
   height: 24px;
