@@ -17,6 +17,11 @@ interface IAccount {
 
 //[GET] /admin/auth/login
 export const login = (req: Request, res: Response) => {
+  if (req.cookies.token) {
+    res.redirect(`/admin/dashboard`);
+    return;
+  }
+
   res.render("admin/pages/auth/login", {
     pageTitle: "Đăng nhập",
   });
