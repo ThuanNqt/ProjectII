@@ -18,6 +18,8 @@ export const requireAuth = async (
       res.redirect(`/admin/auth/login`);
       return;
     } else {
+      // Khai báo app locals để tất cả file pug đều có thể sử dụng được như biến prefixAdmin
+      res.locals.user = user;
       next();
     }
   }

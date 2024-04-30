@@ -1,5 +1,5 @@
 /*Header*/
-/* .header {
+.header {
   border-bottom: 1px solid #ddd;
   padding: 10px 0;
 }
@@ -21,12 +21,12 @@
 
 .header .inner-menu > ul > li {
   margin-left: 20px;
-} */
+}
 
-.header {
+/* .header {
   background-color: #f8f9fa;
   border-bottom: 1px solid #e1e1e1;
-  padding: 5px 0; /* Giảm padding để header nhỏ hơn */
+  padding: 5px 0;
 }
 
 .container {
@@ -41,13 +41,12 @@
   justify-content: space-between;
 }
 
-/* Giảm kích thước logo nếu cần */
 .inner-logo img {
-  width: auto; /* Đặt width tự động hoặc một giá trị cụ thể nếu logo quá lớn */
-  height: 50px; /* Giảm chiều cao của logo */
+  width: auto;
+  height: 50px;
 }
 
-/* Giảm kích thước font và margin của menu nếu cần */
+
 .inner-menu ul {
   list-style: none;
   padding: 0;
@@ -57,20 +56,20 @@
 }
 
 .inner-menu li {
-  margin-left: 20px; /* Giảm khoảng cách giữa các menu item */
+  margin-left: 20px;
 }
 
 .inner-menu a {
   text-decoration: none;
   color: #333;
-  font-size: 14px; /* Giảm kích thước font của liên kết */
+  font-size: 14px;
   font-weight: 500;
 }
 
 .inner-menu a:hover {
   color: #007bff;
 }
-
+*/
 /*End Header*/
 
 /*Footer*/
@@ -160,3 +159,44 @@
   font-weight: bold;
   font-size: 16px;
 }
+
+/* sub-menu */
+.sub-menu {
+  position: relative;
+  z-index: 999;
+}
+
+.sub-menu ul {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: #eae9e9;
+  min-width: 180px;
+  display: none;
+}
+
+.sub-menu ul li {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.sub-menu:hover > ul {
+  display: block;
+}
+
+.sub-menu ul li {
+  position: relative;
+}
+
+.sub-menu ul li ul {
+  right: 100%;
+  top: 0;
+}
+
+.sub-menu ul li:hover > ul {
+  display: block;
+}
+/*End sub-menu*/
