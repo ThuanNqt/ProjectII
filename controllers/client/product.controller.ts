@@ -1,38 +1,40 @@
 import { Request, Response } from "express";
 import Product from "../../models/product.model";
+import { priceNewProducts } from "../../helpers/product";
+
+interface IProduct {
+  title: String;
+  product_category_id: string;
+  description: String;
+  price: Number;
+  newPrice?: number;
+  discountPercentage: Number;
+  stock: Number;
+  thumbnail: String;
+  status: String;
+  featured: String;
+  position: Number;
+  deleted: boolean;
+  deletedAt: Date;
+  slug: string;
+}
+
+interface IFind {
+  deleted: boolean;
+  slug?: string;
+  status: string;
+}
 
 // [GET] /products
 export const index = async (req: Request, res: Response) => {
-  interface IProduct {
-    title: String;
-    description: String;
-    price: Number;
-    discountPercentage: Number;
-    stock: Number;
-    thumbnail: String;
-    status: String;
-    position: Number;
-    deleted: Boolean;
-    newPrice?: number;
-  }
-
-  const products = await Product.find({
+  const find: IFind = {
     status: "active",
     deleted: false,
-  }).sort({ position: "desc" });
+  };
 
-  const newProducts = products.map((product) => {
-    const newProduct: IProduct = {
-      ...product.toObject(), // Assuming that product is a mongoose document, we need to convert it to a plain object
-      newPrice: parseInt(
-        (
-          product.price -
-          product.price * (product.discountPercentage / 100)
-        ).toFixed(0) // Fixed to two decimal places if needed
-      ),
-    };
-    return newProduct;
-  });
+  const products = await Product.find(find).sort({ position: "desc" });
+
+  const newProducts: IProduct[] = priceNewProducts(products);
 
   res.render("client/pages/products/index", {
     pageTitle: "Danh sách sản phẩm",
@@ -43,13 +45,7 @@ export const index = async (req: Request, res: Response) => {
 // [GET] /products/:slug
 export const detail = async (req: Request, res: Response) => {
   try {
-    interface IFind {
-      deleted: boolean;
-      slug: string;
-      status: string;
-    }
-
-    const slug = req.params.slug;
+    const slug: string = req.params.slug;
 
     const find: IFind = {
       deleted: false,
