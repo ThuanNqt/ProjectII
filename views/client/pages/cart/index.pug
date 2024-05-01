@@ -37,9 +37,10 @@ block main
                     input(
                       type="number"
                       class="form-control"
+                      name="quantity"
                       value=item.quantity
                       min="1"
-                      product.id=item.product_id
+                      product_id=item.product_id
                       style="width: 60px"
                     )
                   td #{item.totalPrice}$
@@ -54,3 +55,4 @@ block main
             href="/checkout"
             class="btn btn-success"
           ) Thanh toán
+  script(src="/js/cart.js")

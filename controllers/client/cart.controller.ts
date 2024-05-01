@@ -131,3 +131,25 @@ export const deleteItem = async (req: Request, res: Response) => {
   }
   res.redirect("back");
 };
+
+// [PATCH] /cart/update/:productId/:quantity
+export const updateQuantity = async (req: Request, res: Response) => {
+  try {
+    const cartId = req.cookies.cartId;
+    const productId = req.params.productId;
+    const quantity = parseInt(req.params.quantity);
+    await Cart.updateOne(
+      {
+        _id: cartId,
+        "products.product_id": productId,
+      },
+      {
+        "products.$.quantity": quantity,
+      }
+    );
+    req.flash("success", "Cập nhật giỏ hàng thành công");
+  } catch (error) {
+    req.flash("error", "Cập nhật giỏ hàng thất bại");
+  }
+  res.redirect("back");
+};
