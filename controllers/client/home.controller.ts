@@ -25,20 +25,38 @@ interface IFind {
   status: string;
 }
 
+const limitItem: number = 6;
+
 // [GET] /
 export const index = async (req: Request, res: Response) => {
-  const find: IFind = {
+  // Get 6 products featured
+  const findProductsFeatured: IFind = {
     featured: "1",
     deleted: false,
     status: "active",
   };
 
-  const productsFeatured = await Product.find(find).limit(6);
+  const productsFeatured = await Product.find(findProductsFeatured).limit(
+    limitItem
+  );
 
-  const newProducts: IProduct[] = priceNewProducts(productsFeatured);
+  const newProductsFeatured: IProduct[] = priceNewProducts(productsFeatured);
+
+  // Get products new
+  const findProductsNew = {
+    deleted: false,
+    status: "active",
+  };
+
+  const productsNew = await Product.find(findProductsNew)
+    .sort({ position: "desc" })
+    .limit(limitItem);
+
+  const newProductsNew: IProduct[] = priceNewProducts(productsNew);
 
   res.render("client/pages/home/index", {
     pageTitle: "Trang chủ",
-    productsFeatured: newProducts,
+    productsFeatured: newProductsFeatured,
+    productsNew: newProductsNew,
   });
 };
