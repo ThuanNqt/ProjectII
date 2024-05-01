@@ -1,0 +1,20 @@
+import Cart from "../../models/cart.model";
+import { Request, Response, NextFunction } from "express";
+
+export const cartId = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (!req.cookies.cartId) {
+    const cart = new Cart();
+    await cart.save();
+
+    const expiresTime = 1000 * 60 * 60 * 24 * 365;
+    res.cookie("cartId", cart.id, {
+      expires: new Date(Date.now() + expiresTime),
+    });
+  } else {
+  }
+  next();
+};
