@@ -1,6 +1,7 @@
 import User from "../../models/user.model";
 import md5 from "md5";
 import { Request, Response } from "express";
+import Cart from "../../models/cart.model";
 
 //[GET] /user/register
 export const register = (req: Request, res: Response) => {
@@ -59,6 +60,17 @@ export const loginPost = async (req: Request, res: Response) => {
   }
 
   res.cookie("tokenUser", userAccount.tokenUser);
+
+  //Lưu user_id vào collection carts
+  await Cart.updateOne(
+    {
+      _id: req.cookies.cartId,
+    },
+    {
+      user_id: userAccount.id,
+    }
+  );
+
   res.redirect("/");
 };
 
