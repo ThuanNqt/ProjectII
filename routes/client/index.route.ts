@@ -4,6 +4,7 @@ import { productRoutes } from "./product.route";
 import { searchRoutes } from "./search.route";
 import { cartRoutes } from "./cart.route";
 import { checkoutRoutes } from "./checkout.route";
+import { userRoutes } from "./user.route";
 import { category } from "../../middlewares/client/category.middleware";
 import { cartId } from "../../middlewares/client/cart.middleware";
 
@@ -15,4 +16,5 @@ export default (app: Express): void => {
   app.use("/search", searchRoutes);
   app.use("/cart", cartRoutes);
   app.use("/checkout", checkoutRoutes);
+  app.use("/user", userRoutes);
 };
