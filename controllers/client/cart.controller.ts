@@ -110,3 +110,24 @@ export const addPost = async (req: Request, res: Response) => {
   req.flash("success", "Thêm sản phẩm vào giỏ hàng thành công");
   res.redirect("back");
 };
+
+// [GET] /cart/delete/:productId
+export const deleteItem = async (req: Request, res: Response) => {
+  try {
+    const cartId = req.cookies.cartId;
+    const productId = req.params.productId;
+    await Cart.updateOne(
+      {
+        _id: cartId,
+      },
+      {
+        $pull: { products: { product_id: productId } },
+      }
+    );
+
+    req.flash("success", "Xóa sản phẩm khỏi giỏ hàng thành công");
+  } catch (error) {
+    req.flash("error", "Xóa sản phẩm khỏi giỏ hàng thất bại");
+  }
+  res.redirect("back");
+};
