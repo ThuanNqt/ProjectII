@@ -8,7 +8,7 @@ mixin product-item(item)
       .inner-content
         h3.inner-title
           a(
-            href=`/products/${item.slug}`
+            href=`/products/detail/${item.slug}`
           ) #{item.title}
         .inner-price-new #{item.newPrice}$
         .inner-price-old #{item.price}$

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Product from "../../models/product.model";
 import ProductCategory from "../../models/product-category.model";
-import { priceNewProducts } from "../../helpers/product";
+import { priceNewProducts, priceNewProduct } from "../../helpers/product";
 import { getSubCategory } from "../../helpers/product-category";
 import { get } from "mongoose";
 
@@ -20,6 +20,19 @@ interface IProduct {
   deleted: boolean;
   deletedAt: Date;
   slug: string;
+  category?: ICategory;
+}
+
+interface ICategory {
+  title: String;
+  parent_id: string;
+  description: String;
+  thumbnail: String;
+  status: String;
+  position: Number;
+  slug: string;
+  deleted: boolean;
+  deletedAt: Date;
 }
 
 interface IFind {
@@ -45,10 +58,10 @@ export const index = async (req: Request, res: Response) => {
   });
 };
 
-// [GET] /products/:slug
+// [GET] /products/detail/:slugProduct
 export const detail = async (req: Request, res: Response) => {
   try {
-    const slug: string = req.params.slug;
+    const slug: string = req.params.slugProduct;
 
     const find: IFind = {
       deleted: false,
@@ -56,7 +69,19 @@ export const detail = async (req: Request, res: Response) => {
       status: "active",
     };
 
-    const product = await Product.findOne(find);
+    const product: IProduct = await Product.findOne(find);
+
+    //Lấy ra danh mục sản phẩm
+    if (product.product_category_id) {
+      const category: ICategory = await ProductCategory.findOne({
+        _id: product.product_category_id,
+        status: "active",
+        deleted: false,
+      });
+      product.category = category;
+    }
+
+    product.newPrice = parseInt(await priceNewProduct(product));
 
     res.render(`client/pages/products/detail`, {
       pageTitle: product.title,
