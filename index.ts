@@ -1,4 +1,4 @@
-import express, { Express } from "express";
+import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 dotenv.config();
 import * as database from "./config/database";
@@ -57,6 +57,12 @@ app.use(express.static("public"));
 //Routes
 route(app);
 routeAdmin(app);
+
+app.get("*", (req:Request, res:Response) => {
+  res.render("client/pages/errors/404", {
+    pageTitle: "404 Not Found",
+  });
+});
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);

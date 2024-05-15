@@ -35,7 +35,7 @@ interface IProduct {
 // [GET] /cart
 export const index = async (req: Request, res: Response) => {
   const cart: ICart = await Cart.findOne({
-    _id: req.cookies.cartId,
+    _id: req.cookies.cartId
   });
 
   //Get product
