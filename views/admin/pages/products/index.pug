@@ -48,6 +48,7 @@ block main
             th Vị trí
             th Trạng thái
             th Người tạo
+            th Người sửa cuối cùng
             th Hành động
         tbody
           if(products)
@@ -92,6 +93,11 @@ block main
                 td.align-middle
                   p #{item.accountFullName}
                   +formatDateTime(item.createdBy.createdAt)
+                td.align-middle
+                  - const lastEditByAccount = item.updatedBy.slice(-1)[0];
+                  if(lastEditByAccount)
+                    p #{lastEditByAccount.accountEditFullName}
+                    +formatDateTime(lastEditByAccount.updatedAt)
                 td.align-middle
                   a(
                   href=`/admin/products/detail/${item.id}`

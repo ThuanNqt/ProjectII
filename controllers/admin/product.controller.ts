@@ -8,29 +8,34 @@ import pagination from "../../helpers/pagination";
 import tree from "../../helpers/createTree";
 
 interface IProduct {
-  title: String,
-  product_category_id?: string,
-  description: String,
-  price: Number,
-  discountPercentage: Number,
-  stock: Number,
-  thumbnail: String,
-  status: String,
-  featured: String,
-  position: Number,
-  deleted: boolean,
-  deletedAt: Date,
-  slug: string,
+  title: string;
+  product_category_id?: string;
+  description: string;
+  price: number;
+  discountPercentage: number;
+  stock: number;
+  thumbnail: string;
+  status: string;
+  featured: string;
+  position: number;
+  deleted: boolean;
+  deletedAt: Date;
+  slug: string;
   createdBy?: {
-    account_id?: String,
-    createdAt?: Date,
-  },
+      account_id?: string;
+      createdAt?: Date;
+  };
   deletedBy?: {
-    account_id?: String,
-    deletedAt?: Date,
-  },
-  accountFullName?: string,
-  save?(): Promise<IProduct>,
+      account_id?: string;
+      deletedAt?: Date;
+  };
+  updatedBy?: {
+      account_id?: string;
+      updatedAt?: Date;
+      accountEditFullName?: string;
+  }[];
+  accountFullName?: string;
+  save?(): Promise<IProduct>;
 }
 
 interface IFind {
@@ -107,7 +112,16 @@ export const index = async (req: Request, res: Response) => {
     if(createdByAccount){
       product.accountFullName = createdByAccount.fullName;
     }
+
+    const lastUpdatedByAccount = product.updatedBy.slice(-1)[0];
+    if(lastUpdatedByAccount){
+      const userUpdated = await Account.findOne({
+        _id: lastUpdatedByAccount.account_id,
+      })
+      lastUpdatedByAccount.accountEditFullName = userUpdated.fullName;
+    }
   }
+
 
   res.render("admin/pages/products/index.pug", {
     pageTitle: "Danh sách sản phẩm",
@@ -123,7 +137,22 @@ export const changeStatus = async (req: Request, res: Response) => {
   try {
     const status: string = req.params.status;
     const id: string = req.params.id;
-    await Product.updateOne({ _id: id }, { status: status });
+
+    const updatedBy = {
+      account_id: res.locals.user.id,
+      updatedAt: Date.now(),
+    };
+
+    await Product.updateOne(
+      {_id: id},
+      {
+        status: status,
+        $push: {
+          updatedBy: updatedBy
+        }
+      }
+    )
+
     req.flash("success", "Cập nhật trạng thái thành công!");
   } catch (error) {
     req.flash("error", "Cập nhật trạng thái thất bại!");
@@ -229,7 +258,18 @@ export const editPatch = async (req: Request, res: Response) => {
     req.body.discountPercentage = parseInt(req.body.discountPercentage);
     req.body.position = parseInt(req.body.position);
 
-    await Product.updateOne({ _id: req.params.id }, req.body);
+    const updatedBy = {
+      account_id: res.locals.user.id,
+      updatedAt: Date.now(),
+    };
+
+    await Product.updateOne({ _id: req.params.id }, {
+      ...req.body,
+      $push: {
+        updatedBy: updatedBy
+      }
+    });
+
     req.flash("success", `Cập nhật sản phẩm thành công!`);
   } catch (error) {
     req.flash("success", `Cập nhật sản phẩm thất bại!`);
