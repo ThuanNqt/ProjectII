@@ -79,3 +79,10 @@ export const logout = (req: Request, res: Response) => {
   res.clearCookie("tokenUser");
   res.redirect("/");
 };
+
+// [GET] /user/info
+export const info = (req:Request, res:Response) => {
+  res.render("client/pages/user/infoUser", {
+    pageTitle: "Thông tin tài khoản",
+  });
+};

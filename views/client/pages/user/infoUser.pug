@@ -1,0 +1,21 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main
+  .container.my-3
+    .row
+      .col-12
+        +box-head("Thông tin tài khoản")
+    if(user.fullName)
+      h4(class="mb-4 mt-4") User: #{user.fullName}
+
+    if(user.email)
+      div(class="mb-4") Email: <b>#{user.email}</b>
+
+    if(user.status)
+      div(class="mb-4")
+        span Trạng thái:
+        if(user.status === "active")
+          span(class="badge badge-success ml-2") Hoạt động
+        else
+          span(class="badge badge-danger ml-2") Dừng hoạt động

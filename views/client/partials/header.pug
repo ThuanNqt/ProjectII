@@ -7,7 +7,7 @@ header.header
       .col-3
         .inner-logo
           a(href="/")
-            img(src="/images/NQT-meme.jpg", alt="Logo")
+            img(src="/images/NQT-meme.jpg" alt="Logo")
       .col-5
         form(
           action="/search"
@@ -37,6 +37,8 @@ header.header
             li
               a(href="/cart") <i class="fa-solid fa-cart-shopping"></i> (#{miniCart ? miniCart.totalQuantity : 0})
             if(user)
+              li
+                a(href="/user/info") #{user.fullName}
               li
                 a(href="/user/logout") Đăng xuất
             else
