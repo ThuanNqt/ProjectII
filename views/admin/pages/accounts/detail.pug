@@ -27,11 +27,11 @@ block main
         span(class="badge badge-success ml-2") Hoạt động
       else
         span(class="badge badge-danger ml-2") Dừng hoạt động
-
-  a(
-    class="btn btn-warning"
-    href=`${prefixAdmin}/accounts/edit/${record.id}`
-  ) Chỉnh sửa
+  if(role.permissions.includes("accounts_edit"))
+    a(
+      class="btn btn-warning"
+      href=`/admin/accounts/edit/${record.id}`
+    ) Chỉnh sửa
 
   script(src="/admin/js/account.js")
   script(src="/admin/js/script.js")

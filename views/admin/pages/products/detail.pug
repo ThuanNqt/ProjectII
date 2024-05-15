@@ -37,5 +37,5 @@ block main
               span.badge.badge-success.ml-2 Hoạt động
             else
               span.badge.badge-danger.ml-2 Dừng hoạt động
-
-        a.btn.btn-warning(href=`/admin/products/edit/${product.id}`) Chỉnh sửa
+        if(role.permissions.includes("products_edit"))
+          a.btn.btn-warning(href=`/admin/products/edit/${product.id}`) Chỉnh sửa

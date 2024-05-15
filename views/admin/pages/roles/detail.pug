@@ -6,9 +6,10 @@ block main
 
   if(role.description)
     p !{role.description}
-  a(
-    class="btn btn-warning"
-    href=`/admin/roles/edit/${role.id}`
-  ) Chỉnh sửa
+  if(role.permissions.includes("roles_edit"))
+    a(
+      class="btn btn-warning"
+      href=`/admin/roles/edit/${role.id}`
+    ) Chỉnh sửa
 
   script(src="/admin/js/roles.js")

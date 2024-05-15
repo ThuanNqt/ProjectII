@@ -29,6 +29,7 @@ block main
           p.mb-4 Vị trí:
             b #{productCategory.position}
 
-        a.btn.btn-warning(href=`/admin/products-category/edit/${productCategory.id}`) Chỉnh sửa
+        if(role.permissions.includes("products-category_edit"))
+          a.btn.btn-warning(href=`/admin/products-category/edit/${productCategory.id}`) Chỉnh sửa
 
     script(src="/admin/js/product-category.js")
