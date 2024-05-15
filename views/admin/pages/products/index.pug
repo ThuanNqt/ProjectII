@@ -4,6 +4,7 @@ include ../../mixins/search.pug
 include ../../mixins/pagination.pug
 include ../../mixins/alert.pug
 include ../../mixins/sort.pug
+include ../../mixins/moment.pug
 
 block main
   +alert-success(2000)
@@ -28,7 +29,7 @@ block main
           +sort()
 
   .card.mb-3
-    .card-header Danh sách
+    .card-header Danh sách sản phẩm
     .card-body
       .row
         .col-4
@@ -37,7 +38,7 @@ block main
             class="btn btn-outline-success"
             style="margin-bottom: 10px"
             ) + Thêm sản phẩm
-      table.table.table-hover.table-sm
+      table.table.table-hover.table-sm.text-center
         thead
           tr
             th STT
@@ -46,22 +47,23 @@ block main
             th Giá
             th Vị trí
             th Trạng thái
+            th Người tạo
             th Hành động
         tbody
           if(products)
             each item, index in products
               tr
-                td #{pagination.limitItems * (pagination.currentPage - 1) + (index + 1)}
-                td
+                td.align-middle #{pagination.limitItems * (pagination.currentPage - 1) + (index + 1)}
+                td.align-middle
                   img(
                     src=item.thumbnail,
                     alt=item.title,
                     width="100px",
                     height="auto"
                     )
-                td #{item.title}
-                td #{item.price}$
-                td
+                td.align-middle #{item.title}
+                td.align-middle #{item.price}$
+                td.align-middle
                   input(
                     type="number"
                     value=item.position
@@ -70,7 +72,7 @@ block main
                     name="position"
                     disabled
                   )
-                td
+                td.align-middle
                   if(item.status === "active")
                     a(
                     href='javascript:;'
@@ -86,8 +88,11 @@ block main
                     data-id=item.id
                     button-change-status
                     class='badge badge-danger'
-                  ) Dừng doạt động
-                td
+                  ) Dừng hoạt động
+                td.align-middle
+                  p #{item.accountFullName}
+                  +formatDateTime(item.createdBy.createdAt)
+                td.align-middle
                   a(
                   href=`/admin/products/detail/${item.id}`
                   class="btn btn-secondary btn -sm ml-1"

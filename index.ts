@@ -13,6 +13,10 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 const app: Express = express();
 const path = require("path");
+import moment from "moment"
+
+// App locals variables
+app.locals.moment = moment;
 
 // config tinymce
 app.use(

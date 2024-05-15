@@ -1,19 +1,59 @@
 import { Request, Response } from "express";
 import Product from "../../models/product.model";
+import Account from "../../models/account.model";
 import ProductCategory from "../../models/product-category.model";
 import filterStatusHelper from "../../helpers/filterStatus";
 import searchHelper from "../../helpers/search";
 import pagination from "../../helpers/pagination";
 import tree from "../../helpers/createTree";
 
+interface IProduct {
+  title: String,
+  product_category_id?: string,
+  description: String,
+  price: Number,
+  discountPercentage: Number,
+  stock: Number,
+  thumbnail: String,
+  status: String,
+  featured: String,
+  position: Number,
+  deleted: boolean,
+  deletedAt: Date,
+  slug: string,
+  createdBy?: {
+    account_id?: String,
+    createdAt?: Date,
+  },
+  deletedBy?: {
+    account_id?: String,
+    deletedAt?: Date,
+  },
+  accountFullName?: string,
+  save?(): Promise<IProduct>,
+}
+
+interface IFind {
+  _id?: string;
+  deleted: boolean;
+  status?: string;
+  title?: RegExp | string;
+}
+
+interface ICategory {
+  title: String;
+  parent_id: string;
+  description: String;
+  thumbnail: String;
+  status: String;
+  position: Number;
+  slug: string;
+  deleted: boolean;
+  deletedAt: Date;
+}
+
 // [GET] /admin/products
 export const index = async (req: Request, res: Response) => {
-  interface IFind {
-    deleted: boolean;
-    status?: string;
-    title?: RegExp | string;
-  }
-
   const find: IFind = {
     deleted: false,
   };
@@ -54,10 +94,20 @@ export const index = async (req: Request, res: Response) => {
   const countProduct = await Product.countDocuments(find);
   const objPagination = pagination(req.query, countProduct);
 
-  const products = await Product.find(find)
+  const products:IProduct[] = await Product.find(find)
     .sort(sort as any)
     .limit(objPagination.limitItems)
-    .skip(objPagination.skip);
+    .skip(objPagination.skip) as IProduct[];
+
+  for(const product of products){
+    const createdByAccount = await Account.findOne({
+      _id: product.createdBy.account_id
+    })
+
+    if(createdByAccount){
+      product.accountFullName = createdByAccount.fullName;
+    }
+  }
 
   res.render("admin/pages/products/index.pug", {
     pageTitle: "Danh sách sản phẩm",
@@ -88,7 +138,10 @@ export const deleteProduct = async (req: Request, res: Response) => {
     const id: string = req.params.id;
     await Product.updateOne(
       { _id: id },
-      { deleted: true, deletedAt: Date.now() }
+      { deleted: true, deletedBy:{
+        account_id: res.locals.user.id,
+        deletedAt: Date.now()
+      } }
     );
     req.flash("success", "Xóa sản phẩm thành công!");
   } catch (error) {
@@ -101,17 +154,13 @@ export const deleteProduct = async (req: Request, res: Response) => {
 
 // [GET] /admin/products/create
 export const create = async (req: Request, res: Response) => {
-  interface IFind {
-    deleted: boolean;
-  }
-
   let find: IFind = {
     deleted: false,
   };
 
-  const category = await ProductCategory.find(find);
+  const category: ICategory[] = await ProductCategory.find(find);
 
-  const newCategory = tree(category);
+  const newCategory: ICategory[] = tree(category);
 
   res.render("admin/pages/products/create", {
     pageTitle: "Thêm sản phẩm",
@@ -133,13 +182,13 @@ export const createPost = async (req: Request, res: Response) => {
       req.body.position = parseInt(req.body.position);
     }
 
-    //Upload thumbnail
-    // if (req.file) {
-    //   req.body.thumbnail = `uploads/${req.file.filename}`;
-    // }
+    req.body.createdBy = {
+      account_id: res.locals.user.id
+    }
 
-    const product = new Product(req.body);
+    const product:IProduct = new Product(req.body) as IProduct;
     await product.save();
+
     req.flash("success", `Tạo sản phẩm thành công!`);
   } catch (error) {
     req.flash("success", `Tạo sản phẩm thất bại!`);
@@ -150,22 +199,17 @@ export const createPost = async (req: Request, res: Response) => {
 // [GET] /admin/products/edit/:id
 export const edit = async (req: Request, res: Response) => {
   try {
-    interface IFind {
-      deleted: boolean;
-      _id: string;
-    }
-
     const id: string = req.params.id;
     const find: IFind = {
       deleted: false,
       _id: id,
     };
 
-    const product = await Product.findOne(find);
+    const product:IProduct = await Product.findOne(find);
 
     //Lấy ra danh mục sản phẩm
-    const category = await ProductCategory.find({ deleted: false });
-    const newCategory = tree(category);
+    const category: ICategory[] = await ProductCategory.find({ deleted: false });
+    const newCategory:ICategory[] = tree(category);
 
     res.render("admin/pages/products/edit", {
       pageTitle: "Chỉnh sửa sản phẩm",
@@ -196,18 +240,13 @@ export const editPatch = async (req: Request, res: Response) => {
 // [GET] /admin/products/detail/:id
 export const detail = async (req: Request, res: Response) => {
   try {
-    interface IFind {
-      deleted: boolean;
-      _id: string;
-    }
-
     const id: string = req.params.id;
     const find: IFind = {
       deleted: false,
       _id: id,
     };
 
-    const product = await Product.findOne(find);
+    const product: IProduct = await Product.findOne(find);
 
     res.render("admin/pages/products/detail", {
       pageTitle: product.title,

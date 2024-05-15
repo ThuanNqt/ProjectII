@@ -6,14 +6,14 @@ block main
   +alert-success(2000)
   +alert-error(2000)
 
-  .container.my-3
+  .container.my-5
     .row
       .col-12
         +box-head("Giỏ hàng")
 
     .row
       .col-12
-        table(class="table table-bordered")
+        table(class="table table-bordered text-center table-hover")
           thead
             tr
               th STT
@@ -40,6 +40,7 @@ block main
                       name="quantity"
                       value=item.quantity
                       min="1"
+                      max=item.productInfo.stock
                       product_id=item.product_id
                       style="width: 60px"
                     )
@@ -49,7 +50,7 @@ block main
                       href=`/cart/delete/${item.product_id}`
                       class="btn btn-danger"
                     ) Xóa
-        h3(class="text-right") Tổng tiền: #{cartDetail.totalPrice}$
+        h3(class="text-right text-success font-weight-bold") Tổng tiền: #{cartDetail.totalPrice}$
         div(class="text-right mt-3")
           a(
             href="/checkout"

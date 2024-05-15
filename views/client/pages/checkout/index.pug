@@ -6,13 +6,13 @@ block main
   +alert-success(2000)
   +alert-error(2000)
 
-  .container.my-3
+  .container.my-5
     .row
       .col-12
         +box-head("Đặt hàng")
     .row
       .col-12
-        table(class="table table-bordered")
+        table(class="table table-bordered text-center table-hover")
           thead
             tr
               th STT
@@ -39,7 +39,7 @@ block main
                   class="text-center"
                 ) Giỏ hàng đang trống
         if(cartDetail.products.length > 0)
-          h3(class="text-right") Tổng tiền: #{cartDetail.totalPrice}$
+          h3(class="text-right text-success font-weight-bold") Tổng tiền: #{cartDetail.totalPrice}$
 
     .row
       .col-12
@@ -58,7 +58,7 @@ block main
                 required
               )
             div(class="form-group")
-              label(for="phone") Số điện thoại
+              label(for="phone") Số điện thoại*
               input(
                 type="text"
                 class="form-control"
@@ -67,7 +67,7 @@ block main
                 required
               )
             div(class="form-group")
-              label(for="address") Địa chỉ
+              label(for="address") Địa chỉ người nhận hàng*
               input(
                 type="text"
                 class="form-control"
