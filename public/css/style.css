@@ -1,3 +1,33 @@
+@keyframes colorChange {
+  0% {
+    color: #00ffff; /* Màu xanh lục */
+  }
+  25% {
+    color: #00ff00; /* Màu xanh lá cây */
+  }
+  50% {
+    color: #0000ff; /* Màu xanh dương */
+  }
+  75% {
+    color: #ffff00; /* Màu vàng */
+  }
+  100% {
+    color: #00ffff; /* Màu xanh lục */
+  }
+}
+
+@keyframes colorChangeFeatured {
+  0% {
+    color: #ffff00; /* Màu xanh lục */
+  }
+  50% {
+    color: #00ffff; /* Màu xanh dương */
+  }
+  100% {
+    color: #ffff00; /* Màu xanh lục */
+  }
+}
+
 /*Header*/
 .header {
   border-bottom: 1px solid #ddd;
@@ -5,8 +35,12 @@
 }
 
 .header .inner-logo img {
-  max-height: 50px;
+  max-height: 75px;
   max-width: 100%;
+}
+
+.title-logo {
+  animation: colorChange 5s linear infinite;
 }
 
 .header .inner-menu > ul {
@@ -34,7 +68,7 @@
 
 /*box-head*/
 .box-head {
-  margin-bottom: 0;
+  margin-bottom: 20px;
   font-size: 28px;
   font-weight: 600;
   color: green;
@@ -59,6 +93,12 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.3s ease-in-out;
+}
+
+.product-item .inner-image:hover img {
+  transform: scale(1.1);
+  cursor: pointer;
 }
 
 .product-item .inner-featured {
@@ -71,6 +111,7 @@
   font-weight: 600;
   font-size: 14px;
   border-radius: 8px;
+  animation: colorChangeFeatured 2s linear infinite;
 }
 
 .product-item .inner-content {
@@ -78,13 +119,13 @@
 }
 
 .product-item .inner-content .inner-title {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
 }
 
 .product-item .inner-content .inner-price-new {
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 700;
   color: green;
 }
 
@@ -99,7 +140,7 @@
   font-size: 14px;
   font-weight: 600;
   color: white;
-  background: red;
+  background: rgb(210, 83, 83);
   display: inline-block;
   padding: 3px 10px;
   border-radius: 8px;
@@ -149,11 +190,17 @@
 /* product-detail */
 .product-detail .inner-thumb img {
   width: 100%;
-  height: auto;
+  aspect-ratio: 4/3;
+  transition: transform 0.3s ease-in-out;
+}
+
+.product-detail .inner-thumb:hover img {
+  transform: scale(1.1);
+  cursor: pointer;
 }
 
 .product-detail .inner-title {
-  font-size: 32px;
+  font-size: 30px;
   margin-bottom: 15px;
 }
 
@@ -163,8 +210,8 @@
 
 .product-detail .inner-price-new {
   color: green;
-  font-weight: 600;
-  font-size: 24px;
+  font-weight: 700;
+  font-size: 25px;
   margin-bottom: 10px;
 }
 
@@ -181,21 +228,36 @@
 }
 
 .product-detail .inner-percent span {
-  color: #fff;
-  background: red;
-  font-weight: 600;
+  color: #aa4747;
+  font-weight: 700;
   display: inline-block;
-  padding: 5px 10px;
+  margin-left: 5px;
   border-radius: 8px;
 }
 
 .product-detail .inner-stock span {
-  color: #fff;
-  background: green;
-  font-weight: 600;
+  color: #419c33;
+  font-weight: 700;
   display: inline-block;
-  padding: 5px 10px;
+  margin-left: 5px;
   border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.inner-desc h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.inner-desc p {
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+
+.inner-desc img {
+  width: 100%;
+  height: auto;
   margin-bottom: 10px;
 }
 /* end product-detail */
@@ -225,7 +287,7 @@
 }
 
 [show-alert] [close-alert] {
-  background: #ffffffc4;
+  background: #5c5a5ac4;
   display: inline-block;
   width: 24px;
   height: 24px;
@@ -238,31 +300,38 @@
 /*End Show Alert*/
 
 /* 404 not found*/
-.page_404{ padding:40px 0; background:#fff; font-family: 'Arvo', serif;
+.page_404 {
+  padding: 40px 0;
+  background: #fff;
+  font-family: "Arvo", serif;
 }
 
-.page_404  img{ width:100%;}
+.page_404 img {
+  width: 100%;
+}
 
-.four_zero_four_bg{
+.four_zero_four_bg {
+  background-image: url(https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif);
+  height: 400px;
+  background-position: center;
+}
 
- background-image: url(https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif);
-    height: 400px;
-    background-position: center;
- }
+.four_zero_four_bg h1 {
+  font-size: 80px;
+}
 
-.four_zero_four_bg h1{
- font-size:80px;
- }
+.four_zero_four_bg h3 {
+  font-size: 80px;
+}
 
-.four_zero_four_bg h3{
-  font-size:80px;
- }
-
-.link_404{
-  color: #fff!important;
+.link_404 {
+  color: #fff !important;
   padding: 10px 20px;
   background: #39ac31;
   margin: 20px 0;
-  display: inline-block;}
-.contant_box_404{ margin-top:-50px;}
+  display: inline-block;
+}
+.contant_box_404 {
+  margin-top: -50px;
+}
 /* End 404 not fount*/

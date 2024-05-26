@@ -8,24 +8,7 @@ header.header
         .inner-logo
           a(href="/")
             img(src="/images/NQT-meme.jpg" alt="Logo")
-      .col-5
-        form(
-          action="/search"
-          method="GET"
-        )
-          div(class="form-group d-flex mb-0")
-            input(
-              type="text"
-              class="form-control"
-              placeholder="Tìm kiếm sản phẩm"
-              name="keyword"
-              value=keyword
-            )
-            button(
-              type="submit"
-              class="btn btn-primary"
-            ) <i class="fa-solid fa-magnifying-glass"></i>
-      .col-4
+      .col-9
         .inner-menu
           ul
             li
@@ -46,3 +29,24 @@ header.header
                 a(href="/user/login") Đăng nhập
               li
                 a(href="/user/register") Đăng ký
+
+    .row
+      .col-3
+        h3.title-logo Tech Store
+      .col-6
+        form(
+          action="/search"
+          method="GET"
+        )
+          div(class="form-group d-flex mb-0")
+            input(
+              type="text"
+              class="form-control"
+              placeholder="Tìm kiếm sản phẩm"
+              name="keyword"
+              value=keyword
+            )
+            button(
+              type="submit"
+              class="btn btn-primary"
+            ) <i class="fa-solid fa-magnifying-glass"></i>
