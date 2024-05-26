@@ -160,8 +160,8 @@ export const otpPasswordPost = async (req: Request, res: Response) => {
     const OTP = req.body.OTP;
 
     const getForgotPassword = await ForgotPassword.findOne({
-      email,
-      OTP,
+      email: email,
+      OTP: OTP,
     });
 
     if (!getForgotPassword) {
