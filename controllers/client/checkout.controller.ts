@@ -38,22 +38,21 @@ interface IOrder {
   totalPriceCart?: number;
   save?(): Promise<IOrder>;
   id: string;
-  cart_id: string,
-    userInfo: {
-      fullName: string,
-      phone: string,
-      address: string,
-    },
-    products:
-      {
-        totalPriceProduct?: number;
-        newPrice?: number;
-        productInfo?: IProduct;
-        product_id: string,
-        quantity: number,
-        price: number,
-        discountPercentage: number,
-      }[],
+  cart_id: string;
+  userInfo: {
+    fullName: string;
+    phone: string;
+    address: string;
+  };
+  products: {
+    totalPriceProduct?: number;
+    newPrice?: number;
+    productInfo?: IProduct;
+    product_id: string;
+    quantity: number;
+    price: number;
+    discountPercentage: number;
+  }[];
 }
 
 // [GET] /checkout
@@ -94,12 +93,12 @@ export const index = async (req: Request, res: Response) => {
 };
 
 // [POST] /checkout/order
-export const order = async (req:Request, res:Response) => {
-  const cartId:string = req.cookies.cartId;
+export const order = async (req: Request, res: Response) => {
+  const cartId: string = req.cookies.cartId;
   const userInfo = req.body;
 
   // Get product in cart
-  const cart:ICart = await Cart.findOne({
+  const cart: ICart = await Cart.findOne({
     _id: cartId,
   });
 
@@ -113,7 +112,7 @@ export const order = async (req:Request, res:Response) => {
       quantity: product.quantity,
     };
 
-    const productInfo:IProduct = await Product.findOne({
+    const productInfo: IProduct = await Product.findOne({
       _id: product.product_id,
     });
 
@@ -129,37 +128,55 @@ export const order = async (req:Request, res:Response) => {
     products: products,
   };
 
-  const order:IOrder = new Order(objectOrder) as IOrder;
-  await order.save();
+  try {
+    const order = new Order(objectOrder) as IOrder;
+    await order.save();
 
-  // Clear cart
-  await Cart.updateOne(
-    {
-      _id: cartId,
-    },
-    {
-      products: [],
-      // Giảm số lượng products đã thay đổi
+    // Giảm số lượng products đã thay đổi
+    for (const product of order.products) {
+      const productInfo: IProduct = await Product.findOne({
+        _id: product.product_id,
+      });
+      const newStock = productInfo.stock - product.quantity;
+      await Product.updateOne(
+        {
+          _id: product.product_id,
+        },
+        {
+          stock: newStock,
+        }
+      );
     }
-  );
 
-  res.redirect(`/checkout/success/${order.id}`);
+    // Clear cart
+    await Cart.updateOne(
+      {
+        _id: cartId,
+      },
+      {
+        products: [],
+      }
+    );
+    res.redirect(`/checkout/success/${order.id}`);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 // [GET] /checkout/success/:orderId
-export const success = async (req:Request, res:Response) => {
-  const order:IOrder = await Order.findOne({
+export const success = async (req: Request, res: Response) => {
+  const order: IOrder = await Order.findOne({
     _id: req.params.orderId,
   });
 
   for (let product of order.products) {
-    const productInfo:IProduct = await Product.findOne({
+    const productInfo: IProduct = await Product.findOne({
       _id: product.product_id,
     }).select("title thumbnail");
 
     product.productInfo = productInfo;
 
-    product.newPrice =  parseInt(priceNewProduct(product))
+    product.newPrice = parseInt(priceNewProduct(product));
     product.totalPriceProduct = product.newPrice * product.quantity;
   }
 

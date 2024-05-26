@@ -43,3 +43,41 @@ export const loginPost = async (
   }
   next();
 };
+
+export const forgotPasswordPost = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (!req.body.email) {
+    req.flash("error", "Email không được để trống");
+    res.redirect("back");
+    return;
+  }
+  next();
+};
+
+export const resetPasswordPost = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (!req.body.password) {
+    req.flash("error", "Mật khẩu không được để trống!");
+    res.redirect("back");
+    return;
+  }
+
+  if (!req.body.confirmPassword) {
+    req.flash("error", "Vui lòng xác nhận lại mật khẩu!");
+    res.redirect("back");
+    return;
+  }
+
+  if (req.body.password !== req.body.confirmPassword) {
+    req.flash("error", "Mật khẩu xác nhận không trùng khớp!");
+    res.redirect("back");
+    return;
+  }
+  next();
+};
