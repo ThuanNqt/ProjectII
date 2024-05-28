@@ -7,13 +7,17 @@ import routeAdmin from "./routes/admin/index.route";
 import methodOverride from "method-override";
 import bodyParser from "body-parser";
 const port: number | string = process.env.PORT || 3000;
+import cors from "cors";
 
 import flash from "express-flash";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 const app: Express = express();
 const path = require("path");
-import moment from "moment"
+import moment from "moment";
+
+// cors
+app.use(cors);
 
 // App locals variables
 app.locals.moment = moment;
@@ -58,7 +62,7 @@ app.use(express.static("public"));
 route(app);
 routeAdmin(app);
 
-app.get("*", (req:Request, res:Response) => {
+app.get("*", (req: Request, res: Response) => {
   res.render("client/pages/errors/404", {
     pageTitle: "404 Not Found",
   });
