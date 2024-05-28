@@ -8,6 +8,8 @@ import axios from "axios";
 import qs from "qs";
 import crypto from "crypto";
 import moment from "moment";
+import { sendMail } from "../../helpers/sendEmail";
+import User from "../../models/user.model";
 
 interface ICart {
   user_id?: string;
@@ -60,6 +62,18 @@ interface IOrder {
   }[];
   paymentType?: string;
   payment?: boolean;
+}
+
+interface IUser {
+  fullName: string;
+  password: string;
+  email: string;
+  tokenUser: string;
+  phone: string;
+  avatar: string;
+  status: string;
+  deleted: boolean;
+  deletedAt: Date;
 }
 
 // [GET] /checkout
@@ -166,6 +180,7 @@ export const order = async (req: Request, res: Response) => {
         products: [],
       }
     );
+
     res.redirect(`/checkout/success/${order.id}`);
   } catch (error) {
     console.log(error);
@@ -192,6 +207,69 @@ export const success = async (req: Request, res: Response) => {
   order.totalPriceCart = order.products.reduce((sum, item) => {
     return sum + item.totalPriceProduct;
   }, 0);
+
+  // send mail to user
+  try {
+    // get token user from cookie
+    const tokenUser = req.cookies.tokenUser;
+    const user: IUser = await User.findOne({
+      tokenUser: tokenUser,
+      deleted: false,
+    });
+
+    // Gửi thông báo qua email
+    const subject = "Đặt hàng thành công!";
+    let rows = "";
+    for (let i = 0; i < order.products.length; i++) {
+      let product = order.products[i];
+      rows += `
+        <tr>
+            <td style="border: 1px solid black;" class="align-middle">${
+              i + 1
+            }</td>
+            <td style="border: 1px solid black;" class="align-middle"><img src="${
+              product.productInfo.thumbnail
+            }" alt="${product.productInfo.title}" width="80px"></td>
+            <td style="border: 1px solid black;" class="align-middle">${
+              product.productInfo.title
+            }</td>
+            <td style="border: 1px solid black;" class="align-middle">${
+              product.newPrice
+            }$</td>
+            <td style="border: 1px solid black;" class="align-middle">${
+              product.quantity
+            }</td>
+            <td style="border: 1px solid black;" class="align-middle">${
+              product.totalPriceProduct
+            }$</td>
+        </tr>
+    `;
+    }
+
+    const html = `
+    Đơn hàng của bạn đã được đặt thành công. Chúng tôi sẽ xử lý đơn hàng và bàn giao cho đơn vị vận chuyển trong thời gian sớm nhất.
+    <h4 class="mb-2">Thông tin chi tiết đơn hàng của bạn</h4>
+    <table class="table text-center" style="width: 100%; border: 1px solid black; border-collapse: collapse;">
+        <thead>
+            <tr style="border: 1px solid black;" class="align-middle">
+                <th style="border: 1px solid black;">STT</th>
+                <th style="border: 1px solid black;">Ảnh</th>
+                <th style="border: 1px solid black;">Tên sản phẩm</th>
+                <th style="border: 1px solid black;">Đơn giá</th>
+                <th style="border: 1px solid black;">Số lượng</th>
+                <th style="border: 1px solid black;">Thành tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            ${rows}
+        </tbody>
+    </table>
+    <h3 class="text-right font-weight-bold text-success">Tổng tiền: ${order.totalPriceCart}$</h3>
+`;
+    sendMail(user.email, subject, html);
+  } catch (error) {
+    console.log(error);
+  }
 
   res.render("client/pages/checkout/checkout-success", {
     pageTitle: "Bạn đã đặt hàng thành công",
@@ -308,7 +386,7 @@ export const createPaymentUrl = async (req: Request, res: Response) => {
   vnp_Params["vnp_Locale"] = locale;
   vnp_Params["vnp_CurrCode"] = currCode;
   vnp_Params["vnp_TxnRef"] = orderId;
-  vnp_Params["vnp_OrderInfo"] = orderInfo;
+  vnp_Params["vnp_OrderInfo"] = orderId;
   vnp_Params["vnp_OrderType"] = "other";
   vnp_Params["vnp_Amount"] = amount * 100;
   vnp_Params["vnp_ReturnUrl"] = returnUrl;
@@ -394,6 +472,69 @@ export const vnpayReturn = async (req: Request, res: Response) => {
         // Cập nhật trạng thái thanh toán của đơn hàng
         order.payment = true;
         await order.save();
+
+        // send mail to user
+        try {
+          // get token user from cookie
+          const tokenUser = req.cookies.tokenUser;
+          const user: IUser = await User.findOne({
+            tokenUser: tokenUser,
+            deleted: false,
+          });
+
+          // Gửi thông báo qua email
+          const subject = "Thanh toán đơn hàng thành công!";
+          let rows = "";
+          for (let i = 0; i < order.products.length; i++) {
+            let product = order.products[i];
+            rows += `
+              <tr>
+                  <td style="border: 1px solid black;" class="align-middle">${
+                    i + 1
+                  }</td>
+                  <td style="border: 1px solid black;" class="align-middle"><img src="${
+                    product.productInfo.thumbnail
+                  }" alt="${product.productInfo.title}" width="80px"></td>
+                  <td style="border: 1px solid black;" class="align-middle">${
+                    product.productInfo.title
+                  }</td>
+                  <td style="border: 1px solid black;" class="align-middle">${
+                    product.newPrice
+                  }$</td>
+                  <td style="border: 1px solid black;" class="align-middle">${
+                    product.quantity
+                  }</td>
+                  <td style="border: 1px solid black;" class="align-middle">${
+                    product.totalPriceProduct
+                  }$</td>
+              </tr>
+          `;
+          }
+
+          const html = `
+          Đơn hàng của bạn đã được thanh toán thành công. Chúng tôi sẽ xử lý đơn hàng và bàn giao cho đơn vị vận chuyển trong thời gian sớm nhất.
+          <h4 class="mb-2">Thông tin chi tiết đơn hàng của bạn</h4>
+          <table class="table text-center" style="width: 100%; border: 1px solid black; border-collapse: collapse;">
+              <thead>
+                  <tr style="border: 1px solid black;" class="align-middle">
+                      <th style="border: 1px solid black;">STT</th>
+                      <th style="border: 1px solid black;">Ảnh</th>
+                      <th style="border: 1px solid black;">Tên sản phẩm</th>
+                      <th style="border: 1px solid black;">Đơn giá</th>
+                      <th style="border: 1px solid black;">Số lượng</th>
+                      <th style="border: 1px solid black;">Thành tiền</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  ${rows}
+              </tbody>
+          </table>
+          <h3 class="text-right font-weight-bold text-success">Tổng tiền: ${order.totalPriceCart}$</h3>
+      `;
+          sendMail(user.email, subject, html);
+        } catch (error) {
+          console.log(error);
+        }
 
         res.render("client/pages/checkout/checkout-vnpay-success", {
           code: vnp_Params["vnp_ResponseCode"],
