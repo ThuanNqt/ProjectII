@@ -60,6 +60,11 @@ interface ICategory {
   deletedAt: Date;
 }
 
+interface ISort {
+  [sortKey: string]: string;
+  position?: string;
+}
+
 // [GET] /admin/products
 export const index = async (req: Request, res: Response) => {
   const find: IFind = {
@@ -81,10 +86,6 @@ export const index = async (req: Request, res: Response) => {
   }
 
   // Sort
-  interface ISort {
-    [sortKey: string]: string;
-    position?: string;
-  }
   const sort: ISort = {};
   if (
     typeof req.query.sortKey === "string" &&

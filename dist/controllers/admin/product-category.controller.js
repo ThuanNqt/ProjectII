@@ -16,8 +16,8 @@ exports.detail = exports.editPatch = exports.edit = exports.deleteItem = exports
 const product_category_model_1 = __importDefault(require("../../models/product-category.model"));
 const filterStatus_1 = __importDefault(require("../../helpers/filterStatus"));
 const search_1 = __importDefault(require("../../helpers/search"));
-const pagination_1 = __importDefault(require("../../helpers/pagination"));
 const createTree_1 = __importDefault(require("../../helpers/createTree"));
+const product_model_1 = __importDefault(require("../../models/product.model"));
 const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const find = {
         deleted: false,
@@ -31,17 +31,15 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         find.title = objSearch.regex;
     }
     const countProduct = yield product_category_model_1.default.countDocuments(find);
-    const objPagination = (0, pagination_1.default)(req.query, countProduct);
-    const productCategories = yield product_category_model_1.default.find(find).sort({
+    const productCategories = (yield product_category_model_1.default.find(find).sort({
         position: "desc",
-    });
+    }));
     const newRecords = (0, createTree_1.default)(productCategories);
     res.render("admin/pages/products-category/index", {
         pageTitle: "Danh mục sản phẩm",
         records: newRecords,
         filterStatus: filterStatus,
         keyword: objSearch.keyword,
-        pagination: objPagination,
     });
 });
 exports.index = index;
@@ -95,6 +93,22 @@ exports.changeStatus = changeStatus;
 const deleteItem = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = req.params.id;
+        const categoryChild = yield product_category_model_1.default.findOne({
+            parent_id: id,
+            deleted: false,
+        });
+        const product = yield product_model_1.default.findOne({
+            product_category_id: id,
+            deleted: false,
+        });
+        if (categoryChild) {
+            req.flash("error", `Danh mục này đang chứa một số danh mục con!`);
+            return res.redirect("back");
+        }
+        if (product) {
+            req.flash("error", `Danh mục này đang chứa một số sản phẩm!`);
+            return res.redirect("back");
+        }
         yield product_category_model_1.default.updateOne({ _id: id }, { deleted: true, deletedAt: Date.now() });
         req.flash("success", `Xóa danh mục thành công!`);
     }
@@ -126,13 +140,13 @@ const edit = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.edit = edit;
 const editPatch = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    req.body.position = parseInt(req.body.position);
     try {
+        req.body.position = parseInt(req.body.position);
         yield product_category_model_1.default.updateOne({ _id: req.params.id }, req.body);
-        req.flash("success", `Cập nhật thành công!`);
+        req.flash("success", `Cập nhật danh mục thành công!`);
     }
     catch (error) {
-        req.flash("success", `Cập nhật thất bại!`);
+        req.flash("success", `Cập nhật danh mục thất bại!`);
     }
     res.redirect("/admin/products-category");
 });

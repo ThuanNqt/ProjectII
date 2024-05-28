@@ -22,30 +22,31 @@ block main
 
     .card.mb-3
       .card-header Danh mục
-        .card-body
-          .row
-            .col-8
-            .col-4
-              if(role.permissions.includes("products-category_create"))
-                a(
-                  href=`/admin/products-category/create`
-                  class="btn btn-outline-success mb-4"
-                  ) + Thêm danh mục
+      .card-body
+        .row
+          .col-8
+          .col-4.text-right
+            if(role.permissions.includes("products-category_create"))
+              a(
+                href=`/admin/products-category/create`
+                class="btn btn-success mb-4"
+                ) + Thêm danh mục
 
-          table(
-            class="table table-hover table-sm text-center"
-          )
-            thead
-              tr.align-middle
-                th STT
-                th Hình ảnh
-                th Tiêu đề
-                th Vị trí
-                th Trạng thái
-                th Hành động
-            tbody
-              +table-tree(records)
-    +pagination(pagination)
+        table(
+          class="table table-hover table-sm text-center table-bordered"
+        )
+          thead
+            tr.text-center
+              th STT
+              th Hình ảnh
+              th Tiêu đề
+              th Vị trí
+              th Trạng thái
+              th Hành động
+          tbody
+            +table-tree(records)
+
+
 
     form(
       action=""

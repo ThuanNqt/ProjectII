@@ -2,16 +2,15 @@ mixin table-tree(items, level = 1)
   each item, index in items
     - const prefix = Array(level + 1).join("-- ")
     tr
-      td.align-center #{item.index}
-      td
+      td.align-middle #{item.index}
+      td.align-middle
         img(
           src=item.thumbnail,
           alt=item.title,
-          width="100px",
-          height="auto"
+          style="width: 75px; height: 75px;"
           )
-      td.align-center #{prefix}#{item.title}
-      td.align-center
+      td.align-middle #{prefix}#{item.title}
+      td.align-middle
         input(
           type="number"
           value=item.position
@@ -20,7 +19,7 @@ mixin table-tree(items, level = 1)
           name="position"
           disabled
         )
-      td.align-center
+      td.align-middle
         if(role.permissions.includes("products-category_edit"))
           if(item.status === "active")
             a(
@@ -37,9 +36,9 @@ mixin table-tree(items, level = 1)
               data-id=item.id
               button-change-status
               class='badge badge-danger'
-            ) Dừng doạt động
+            ) Dừng hoạt động
 
-      td.align-center
+      td.align-middle
         a(
           href=`/admin/products-category/detail/${item.id}`
           class="btn btn-secondary btn -sm ml-1"
