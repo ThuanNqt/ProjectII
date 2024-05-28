@@ -50,10 +50,18 @@ block main
                       href=`/cart/delete/${item.product_id}`
                       class="btn btn-danger"
                     ) Xóa
-        h3(class="text-right text-success font-weight-bold") Tổng tiền: #{cartDetail.totalPrice}$
-        div(class="text-right mt-3")
-          a(
-            href="/checkout"
-            class="btn btn-success"
-          ) Thanh toán
+            else
+              tr
+                td(
+                  colspan="7"
+                  class="text-center"
+                ) Giỏ hàng đang trống
+        if(cartDetail.products.length > 0)
+          h3(class="text-right text-success font-weight-bold") Tổng tiền: #{cartDetail.totalPrice}$
+          div(class="text-right mt-3")
+            a(
+              href="/checkout"
+              class="btn btn-success"
+            ) Thanh toán
+
   script(src="/js/cart.js")
