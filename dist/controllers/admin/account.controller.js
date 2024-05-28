@@ -16,10 +16,20 @@ exports.editPatch = exports.edit = exports.detail = exports.changeStatus = expor
 const account_model_1 = __importDefault(require("../../models/account.model"));
 const role_model_1 = __importDefault(require("../../models/role.model"));
 const md5_1 = __importDefault(require("md5"));
+const filterStatus_1 = __importDefault(require("../../helpers/filterStatus"));
+const search_1 = __importDefault(require("../../helpers/search"));
 const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let find = {
         deleted: false,
     };
+    const filterStatus = (0, filterStatus_1.default)(req.query);
+    if (req.query.status) {
+        find.status = req.query.status.toString();
+    }
+    const objSearch = (0, search_1.default)(req.query);
+    if (req.query.keyword) {
+        find.fullName = objSearch.regex;
+    }
     const records = yield account_model_1.default.find(find).select("-password -token");
     for (let record of records) {
         let role = yield role_model_1.default.findOne({
@@ -31,6 +41,8 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.render("admin/pages/accounts/index", {
         pageTitle: "Danh sách tài khoản",
         records: records,
+        filterStatus: filterStatus,
+        keyword: objSearch.keyword,
     });
 });
 exports.index = index;
@@ -45,7 +57,9 @@ const create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             roles: roles,
         });
     }
-    catch (error) { }
+    catch (error) {
+        console.log(error);
+    }
 });
 exports.create = create;
 const createPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

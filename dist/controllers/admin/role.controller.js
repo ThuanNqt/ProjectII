@@ -13,11 +13,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.permissionsPatch = exports.permissions = exports.editPatch = exports.edit = exports.detail = exports.deleteRole = exports.createPost = exports.create = exports.index = void 0;
+const search_1 = __importDefault(require("../../helpers/search"));
+const account_model_1 = __importDefault(require("../../models/account.model"));
 const role_model_1 = __importDefault(require("../../models/role.model"));
 const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let find = {
         deleted: false,
     };
+    const objSearch = (0, search_1.default)(req.query);
+    if (req.query.keyword) {
+        find.title = objSearch.regex;
+    }
     const records = yield role_model_1.default.find(find);
     res.render("admin/pages/roles/index", {
         pageTitle: "Trang nhóm quyền",
@@ -35,10 +41,10 @@ const createPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     try {
         const record = new role_model_1.default(req.body);
         yield record.save();
-        req.flash("success", `Tạo nhóm quyền thành công!`);
+        req.flash("success", `Tạo quyền thành công!`);
     }
     catch (error) {
-        req.flash("error", `Tạo nhóm quyền thất bại!`);
+        req.flash("error", `Tạo quyền thất bại!`);
     }
     res.redirect(`/admin/roles`);
 });
@@ -46,6 +52,11 @@ exports.createPost = createPost;
 const deleteRole = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = req.params.id;
+        const account = yield account_model_1.default.findOne({ role_id: id });
+        if (account) {
+            req.flash("error", `Một số tài khoản đang có quyền này!`);
+            return res.redirect(`back`);
+        }
         yield role_model_1.default.updateOne({ _id: id }, { deleted: true });
         req.flash("success", `Xóa nhóm quyền thành công!`);
     }
@@ -93,10 +104,10 @@ const editPatch = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield role_model_1.default.updateOne({ _id: req.params.id }, req.body);
         res.redirect("/admin/roles");
-        req.flash("success", `Cập nhật thành công!`);
+        req.flash("success", `Cập nhật quyền thành công!`);
     }
     catch (error) {
-        req.flash("error", `Cập nhật thất bại!`);
+        req.flash("error", `Cập nhật quyền thất bại!`);
     }
 });
 exports.editPatch = editPatch;
@@ -122,10 +133,10 @@ const permissionsPatch = (req, res) => __awaiter(void 0, void 0, void 0, functio
         for (const item of permissions) {
             yield role_model_1.default.updateOne({ _id: item.id }, { permissions: item.permissions });
         }
-        req.flash("success", "Cập nhật thành công!");
+        req.flash("success", "Phân quyền thành công!");
     }
     catch (error) {
-        req.flash("error", "Cập nhật thất bại!");
+        req.flash("error", "Phân quyền thất bại!");
     }
     res.redirect("back");
 });

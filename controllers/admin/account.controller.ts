@@ -2,29 +2,33 @@ import Account from "../../models/account.model";
 import Role from "../../models/role.model";
 import md5 from "md5";
 import { Request, Response } from "express";
+import filterStatusHelper from "../../helpers/filterStatus";
+import searchHelper from "../../helpers/search";
 
 interface IFind {
-  deleted: boolean;
   _id?: string;
+  deleted: boolean;
+  status?: string;
+  fullName?: RegExp | string;
 }
 
 interface IAccount {
-  fullName: String;
-  password: String;
-  email: String;
+  fullName: string;
+  password: string;
+  email: string;
   token: string;
-  phone: String;
-  avatar: String;
-  role_id: String;
+  phone: string;
+  avatar: string;
+  role_id: string;
   role?: IRole;
-  status: String;
+  status: string;
   deleted: boolean;
   deletedAt: Date;
 }
 
 interface IRole {
-  title: String;
-  description: String;
+  title: string;
+  description: string;
   permissions: string[];
   deleted: boolean;
   deletedAt: Date;
@@ -35,6 +39,20 @@ export const index = async (req: Request, res: Response) => {
   let find: IFind = {
     deleted: false,
   };
+
+  // filter status
+  const filterStatus = filterStatusHelper(req.query);
+
+  // If there is a status, add search conditions
+  if (req.query.status) {
+    find.status = req.query.status.toString();
+  }
+
+  // Search products by keyword
+  const objSearch = searchHelper(req.query);
+  if (req.query.keyword) {
+    find.fullName = objSearch.regex;
+  }
 
   // Tìm kiếm loại trừ đi password và token
   const records: IAccount[] = await Account.find(find).select(
@@ -53,6 +71,8 @@ export const index = async (req: Request, res: Response) => {
   res.render("admin/pages/accounts/index", {
     pageTitle: "Danh sách tài khoản",
     records: records,
+    filterStatus: filterStatus,
+    keyword: objSearch.keyword,
   });
 };
 
@@ -69,13 +89,15 @@ export const create = async (req: Request, res: Response) => {
       pageTitle: "Tạo tài khoản",
       roles: roles,
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 //[POST] /admin/accounts/create
 export const createPost = async (req: Request, res: Response) => {
   try {
-    const emailExist = await Account.findOne({
+    const emailExist: IAccount = await Account.findOne({
       email: req.body.email,
       deleted: false,
     });
@@ -188,7 +210,7 @@ export const edit = async (req: Request, res: Response) => {
 // [PATCH] /admin/products/edit/:id
 export const editPatch = async (req: Request, res: Response) => {
   try {
-    const emailExist = await Account.findOne({
+    const emailExist: IAccount = await Account.findOne({
       email: req.body.email,
       deleted: false,
       _id: { $ne: req.params.id }, // Không kiểm tra email của chính record đang sửa
