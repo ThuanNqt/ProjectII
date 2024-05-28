@@ -1,0 +1,59 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main
+  .container.my-3
+    if code == "00"
+      .row
+        .col-12
+          +box-head("Thanh toán thành công")
+      .row
+        .col-12
+          div(class="alert alert-success") Đơn hàng của bạn đã được thanh toán. Chúng tôi sẽ xử lý đơn hàng và bàn giao cho đơn vị vận chuyển trong thời gian sớm nhất.
+    else
+      .row
+        .col-12
+          +box-head("Thanh toán thất bại")
+    if(order)
+      .row
+        .col-12
+          h4(class="mb-2") Thông tin cá nhân
+          table(class="table table-bordered")
+            tbody
+              tr
+                td Họ tên
+                td
+                  b #{order.userInfo.fullName}
+              tr
+                td Số điện thoại
+                td
+                  b #{order.userInfo.phone}
+              tr
+                td Địa chỉ
+                td
+                  b #{order.userInfo.address}
+      .row
+        .col-12
+          h4(class="mb-2") Thông tin đơn hàng
+          table(class="table table-bordered text-center")
+            thead
+              tr.align-middle
+                th STT
+                td Ảnh
+                th Tên sản phẩm
+                th Đơn giá
+                th Số lượng
+                th Thành tiền
+            tbody
+              if(order.products.length > 0)
+                each item, index in order.products
+                  tr
+                    td.align-middle #{index + 1}
+                    td.align-middle
+                      img(src=item.productInfo.thumbnail, alt=item.productInfo.title  width="80px")
+                    td.align-middle #{item.productInfo.title}
+                    td.align-middle #{item.newPrice}$
+                    td.align-middle #{item.quantity}
+                    td.align-middle #{item.totalPriceProduct}$
+          if(order.products.length > 0)
+            h3(class="text-right font-weight-bold text-success") Tổng tiền: #{order.totalPriceCart}$

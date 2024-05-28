@@ -16,6 +16,8 @@ const orderSchema = new mongoose.Schema(
         discountPercentage: Number,
       },
     ],
+    paymentType: String,
+    payment: Boolean,
   },
   {
     timestamps: true,
