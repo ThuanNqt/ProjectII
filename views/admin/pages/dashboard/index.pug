@@ -4,55 +4,48 @@ include ../../mixins/alert.pug
 block main
   +alert-error(2000)
   +alert-success(2000)
-  h1 Đây là trang dashboard
+  h1 Dashboard
 
   .row.mt-4
-    .col-12
+    .col-12.col-lg-6
       .card.mb-4
         .card-header Thông tin tài khoản
         .card-body
           if(user.avatar)
-            img(
-              src=user.avatar
-              style="height: 100px; margin-bottom: 15px"
-          )
+            .text-center
+              img.rounded-circle(
+                src=user.avatar
+                style="height: 100px; width: 100px; object-fit: cover; margin-bottom: 15px"
+              )
           if(user.fullName)
-            p Họ tên: <b>#{user.fullName}</b>
+            .d-flex.justify-content-between
+              p.mb-0 Họ tên:
+              p.mb-0.font-weight-bold #{user.fullName}
           if(user.email)
-            p Email: <b>#{user.email}</b>
+            .d-flex.justify-content-between
+              p.mb-0 Email:
+              p.mb-0.font-weight-bold #{user.email}
           if(user.phone)
-            p Số điện thoại: <b>#{user.phone}</b>
+            .d-flex.justify-content-between
+              p.mb-0 Số điện thoại:
+              p.mb-0.font-weight-bold #{user.phone}
           if(role.title)
-            p Quyền: <b>#{role.title}</b>
+            .d-flex.justify-content-between
+              p.mb-0 Quyền:
+              p.mb-0.font-weight-bold #{role.title}
 
-    .col-6
-      .card.mb-4
-        .card-header Danh mục sản phẩm
-        .card-body
-          p Số lượng: <b>#{statistic.categoryProduct.total}</b>
-          p Hoạt động: <b>#{statistic.categoryProduct.active}</b>
-          p Dừng hoạt động: <b>#{statistic.categoryProduct.inactive}</b>
-
-    .col-6
-      .card.mb-4
-        .card-header Sản phẩm
-        .card-body
-          p Số lượng: <b>#{statistic.product.total}</b>
-          p Hoạt động: <b>#{statistic.product.active}</b>
-          p Dừng hoạt động: <b>#{statistic.product.inactive}</b>
-
-    .col-6
-      .card.mb-4
-        .card-header Tài khoản Admin
-        .card-body
-          p Số lượng: <b>#{statistic.account.total}</b>
-          p Hoạt động: <b>#{statistic.account.active}</b>
-          p Dừng hoạt động: <b>#{statistic.account.inactive}</b>
-
-    .col-6
-      .card.mb-4
-        .card-header Tài khoản Client
-        .card-body
-          p Số lượng: <b>#{statistic.user.total}</b>
-          p Hoạt động: <b>#{statistic.user.active}</b>
-          p Dừng hoạt động: <b>#{statistic.user.inactive}</b>
+    .col-12.col-lg-6
+      - var cards = []
+      - var card1 = { title: 'Danh mục sản phẩm', content: statistic.categoryProduct }
+      - var card2 = { title: 'Sản phẩm', content: statistic.product }
+      - var card3 = { title: 'Tài khoản Admin', content: statistic.account }
+      - var card4 = { title: 'Tài khoản Client', content: statistic.user }
+      - cards.push(card1, card2, card3, card4)
+      each card, i in cards
+        .card.mb-4
+          .card-header= card.title
+          .card-body
+            each val, key in card.content
+              .d-flex.justify-content-between
+                p.mb-0 #{key.charAt(0).toUpperCase() + key.slice(1)}:
+                p.mb-0.font-weight-bold #{val}

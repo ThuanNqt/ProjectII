@@ -1,8 +1,16 @@
 .header {
-  background-color: #343a40; /* Màu nền đậm cho header admin */
-  color: #ffffff;
+  background-color: #ffffff; /* Trắng */
+  color: #343a40; /* Đậm contrast với trắng */
+  border-bottom: 1px solid #ddd;
   padding: 10px 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+body {
+  padding-top: 60px; /* Thay 60px bằng chiều cao của header */
 }
 
 .container-fluid {
@@ -30,7 +38,7 @@
 
 .inner-logo a {
   text-decoration: none;
-  color: #ffffff;
+  color: #000000;
   font-weight: bold;
   font-size: 20px;
 }
@@ -42,6 +50,19 @@
 /* Thêm style cho phần nội dung bên phải của header nếu cần */
 .col-9 {
   text-align: right;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-item {
+  color: #343a40;
+}
+
+.dropdown-item:hover {
+  color: #ffc107;
+  background-color: #f8f9fa;
 }
 
 /* Thêm style cho các thành phần khác trong header như menu, thông báo, tài khoản admin nếu có */
@@ -70,39 +91,35 @@
 
 /*Sider*/
 .sider {
-  background-color: #343a40;
-  color: #fff;
-  min-height: 100vh; /* Đảm bảo rằng sider kéo dài toàn chiều cao của viewport */
-  width: 250px; /* Đặt chiều rộng cố định cho sider */
-  position: fixed; /* Sider sẽ cố định và không di chuyển khi scroll */
-  top: 0;
-  left: 0;
-  overflow-x: hidden; /* Ẩn nội dung nếu nó vượt quá chiều rộng của sider */
-  padding-top: 20px; /* Tạo khoảng cách trên cùng cho sider */
+  text-align: left;
+  max-width: 230px;
+  margin: 0;
+  height: 100vh;
+  background-color: #343a40; /* Màu nền đậm */
+  color: #ffffff; /* Màu chữ trắng */
+  display: flex;
+  flex-direction: column;
 }
 
 .sider .inner-menu ul {
-  list-style: none; /* Bỏ style mặc định của list */
+  list-style: none;
   padding: 0;
-  margin: 0;
+  margin-left: 8px;
 }
 
 .sider .inner-menu ul li {
-  padding: 10px 15px; /* Tạo padding cho mỗi item để dễ nhấn */
-  border-bottom: 1px solid #474f57; /* Tạo đường viền phân cách giữa các item */
+  padding: 10px 0;
 }
 
 .sider .inner-menu ul li a {
-  color: #adb5bd; /* Đặt màu cho liên kết */
-  text-decoration: none; /* Bỏ gạch chân của liên kết */
-  display: block; /* Kích thước liên kết sẽ phủ kín khu vực có thể nhấn */
+  color: #ffffff; /* Màu liên kết trắng */
+  text-decoration: none;
 }
 
 .sider .inner-menu ul li a:hover {
-  color: #fff; /* Thay đổi màu khi hover */
-  background-color: #495057; /* Thay đổi màu nền khi hover */
+  color: #f5f53f; /* Màu liên kết khi di chuột qua */
+  transition: all 0.3s ease-in-out; /* Hiệu ứng khi di chuột qua */
 }
-
 /*End Sider*/
 
 /*Pagination*/
