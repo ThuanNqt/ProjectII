@@ -20,6 +20,7 @@ const filterStatus_1 = __importDefault(require("../../helpers/filterStatus"));
 const search_1 = __importDefault(require("../../helpers/search"));
 const pagination_1 = __importDefault(require("../../helpers/pagination"));
 const createTree_1 = __importDefault(require("../../helpers/createTree"));
+const product_1 = require("../../helpers/product");
 const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const find = {
         deleted: false,
@@ -44,13 +45,13 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     const countProduct = yield product_model_1.default.countDocuments(find);
     const objPagination = (0, pagination_1.default)(req.query, countProduct);
-    const products = yield product_model_1.default.find(find)
+    const products = (yield product_model_1.default.find(find)
         .sort(sort)
         .limit(objPagination.limitItems)
-        .skip(objPagination.skip);
+        .skip(objPagination.skip));
     for (const product of products) {
         const createdByAccount = yield account_model_1.default.findOne({
-            _id: product.createdBy.account_id
+            _id: product.createdBy.account_id,
         });
         if (createdByAccount) {
             product.accountFullName = createdByAccount.fullName;
@@ -83,8 +84,8 @@ const changeStatus = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         yield product_model_1.default.updateOne({ _id: id }, {
             status: status,
             $push: {
-                updatedBy: updatedBy
-            }
+                updatedBy: updatedBy,
+            },
         });
         req.flash("success", "Cập nhật trạng thái thành công!");
     }
@@ -97,10 +98,13 @@ exports.changeStatus = changeStatus;
 const deleteProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = req.params.id;
-        yield product_model_1.default.updateOne({ _id: id }, { deleted: true, deletedBy: {
+        yield product_model_1.default.updateOne({ _id: id }, {
+            deleted: true,
+            deletedBy: {
                 account_id: res.locals.user.id,
-                deletedAt: Date.now()
-            } });
+                deletedAt: Date.now(),
+            },
+        });
         req.flash("success", "Xóa sản phẩm thành công!");
     }
     catch (error) {
@@ -134,7 +138,7 @@ const createPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             req.body.position = parseInt(req.body.position);
         }
         req.body.createdBy = {
-            account_id: res.locals.user.id
+            account_id: res.locals.user.id,
         };
         const product = new product_model_1.default(req.body);
         yield product.save();
@@ -154,7 +158,9 @@ const edit = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             _id: id,
         };
         const product = yield product_model_1.default.findOne(find);
-        const category = yield product_category_model_1.default.find({ deleted: false });
+        const category = yield product_category_model_1.default.find({
+            deleted: false,
+        });
         const newCategory = (0, createTree_1.default)(category);
         res.render("admin/pages/products/edit", {
             pageTitle: "Chỉnh sửa sản phẩm",
@@ -178,7 +184,7 @@ const editPatch = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             updatedAt: Date.now(),
         };
         yield product_model_1.default.updateOne({ _id: req.params.id }, Object.assign(Object.assign({}, req.body), { $push: {
-                updatedBy: updatedBy
+                updatedBy: updatedBy,
             } }));
         req.flash("success", `Cập nhật sản phẩm thành công!`);
     }
@@ -196,6 +202,15 @@ const detail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             _id: id,
         };
         const product = yield product_model_1.default.findOne(find);
+        if (product.product_category_id) {
+            const category = yield product_category_model_1.default.findOne({
+                _id: product.product_category_id,
+                status: "active",
+                deleted: false,
+            });
+            product.category = category;
+        }
+        product.newPrice = parseInt((0, product_1.priceNewProduct)(product));
         res.render("admin/pages/products/detail", {
             pageTitle: product.title,
             product: product,

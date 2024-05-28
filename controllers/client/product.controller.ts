@@ -6,17 +6,17 @@ import { getSubCategory } from "../../helpers/product-category";
 import { get } from "mongoose";
 
 interface IProduct {
-  title: String;
+  title: string;
   product_category_id: string;
-  description: String;
-  price: Number;
+  description: string;
+  price: number;
   newPrice?: number;
-  discountPercentage: Number;
-  stock: Number;
-  thumbnail: String;
-  status: String;
-  featured: String;
-  position: Number;
+  discountPercentage: number;
+  stock: number;
+  thumbnail: string;
+  status: string;
+  featured: string;
+  position: number;
   deleted: boolean;
   deletedAt: Date;
   slug: string;
@@ -24,12 +24,12 @@ interface IProduct {
 }
 
 interface ICategory {
-  title: String;
+  title: string;
   parent_id: string;
-  description: String;
-  thumbnail: String;
-  status: String;
-  position: Number;
+  description: string;
+  thumbnail: string;
+  status: string;
+  position: number;
   slug: string;
   deleted: boolean;
   deletedAt: Date;
@@ -50,7 +50,7 @@ export const index = async (req: Request, res: Response) => {
 
   const products = await Product.find(find).sort({ position: "desc" });
 
-  const newProducts: IProduct[] = priceNewProducts(products);
+  const newProducts: IProduct[] = priceNewProducts(products) as IProduct[];
 
   res.render("client/pages/products/index", {
     pageTitle: "Danh sách sản phẩm",

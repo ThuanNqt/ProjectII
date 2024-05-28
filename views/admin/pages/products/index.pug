@@ -33,16 +33,17 @@ block main
       .card-header Danh sách sản phẩm
       .card-body
         .row
-          .col-4
+          .col-8
+          .col-4.text-right
             if(role.permissions.includes("products_create"))
               a(
                 href="/admin/products/create"
-                class="btn btn-outline-success"
-                style="margin-bottom: 10px"
+                class="btn btn-success"
+                style="margin-bottom: 15px"
                 ) + Thêm sản phẩm
-        table.table.table-hover.table-sm.text-center
+        table.table.table-hover.table-sm.text-center.table-bordered
           thead
-            tr
+            tr.text-center
               th STT
               th Hình ảnh
               th Tiêu đề
@@ -65,7 +66,7 @@ block main
                       height="auto"
                       )
                   td.align-middle #{item.title}
-                  td.align-middle #{item.price}$
+                  td.align-middle #{formatMoney(item.price)}
                   td.align-middle
                     input(
                       type="number"
@@ -118,7 +119,10 @@ block main
                       data-id=item.id
                       ) Xóa
 
-    +pagination(pagination)
+    .container
+      .row
+        .col-12.d-flex.align-items-center.justify-content-center
+          +pagination(pagination)
 
     form(
       action=""

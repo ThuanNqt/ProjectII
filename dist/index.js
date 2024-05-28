@@ -34,14 +34,16 @@ const index_route_1 = __importDefault(require("./routes/client/index.route"));
 const index_route_2 = __importDefault(require("./routes/admin/index.route"));
 const method_override_1 = __importDefault(require("method-override"));
 const body_parser_1 = __importDefault(require("body-parser"));
-const port = process.env.PORT || 3000;
 const express_flash_1 = __importDefault(require("express-flash"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const express_session_1 = __importDefault(require("express-session"));
+const moment_1 = __importDefault(require("moment"));
+const formatMoney_1 = require("./helpers/formatMoney");
+const port = process.env.PORT || 3000;
 const app = (0, express_1.default)();
 const path = require("path");
-const moment_1 = __importDefault(require("moment"));
 app.locals.moment = moment_1.default;
+app.locals.formatMoney = formatMoney_1.formatMoney;
 app.use("/tinymce", express_1.default.static(path.join(__dirname, "node_modules", "tinymce")));
 app.use((0, cookie_parser_1.default)("KeyRandom"));
 app.use((0, express_session_1.default)({

@@ -1,41 +1,53 @@
 extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
 
 block main
-  .container.mt-4
-    if(product.title)
-      h1.mb-4 #{product.title}
+  .product-detail
+    .container.my-5
+      .row.d-flex.justify-content-center.align-items-center
+        .col-6
+          .inner-thumb
+            img(src=product.thumbnail, alt=product.title)
+        .col-6
+          h3(class="inner-title") #{product.title}
 
-    .row
-      .col-md-4
-        if(product.thumbnail)
-          img.img-thumbnail.mb-3(src=product.thumbnail alt='Product Image' style="width: 100%; max-width: 300px; height: auto;")
+          if(product.category)
+            div(class="inner-category")
+              span Danh mục: #{product.category.title}
 
-        if(product.description)
-          p.mb-4 Mô tả:
-            i !{product.description}
+          if(product.newPrice)
+            div(class="inner-price-new") #{formatMoney(product.newPrice)}
 
-      .col-md-8
-        if(product.price)
-          p.mb-2 Giá:
-            span.font-weight-bold #{product.price}
+          if(product.price)
+            div(class="inner-price-old") #{formatMoney(product.price)}
 
-        if(product.discountPercentage)
-          p.mb-2 Giảm giá:
-            span.font-weight-bold #{product.discountPercentage}%
+          if(product.position)
+            p.mb-2 Vị trí:
+              span.font-weight-bold #{product.position}
 
-        if(product.stock)
-          p.mb-2 Số lượng:
-            span.font-weight-bold #{product.stock}
+          if(product.discountPercentage)
+            div(class="inner-percent") Giảm tới: <span>#{product.discountPercentage}%</span>
 
-        if(product.position)
-          p.mb-2 Vị trí:
-            span.font-weight-bold #{product.position}
+          if(product.stock)
+            div(class="inner-stock") Còn lại: <span>#{product.stock}</span> sản phẩm
 
-        if(product.status)
-          p.mb-2 Trạng thái:
-            if(product.status === "active")
-              span.badge.badge-success.ml-2 Hoạt động
-            else
-              span.badge.badge-danger.ml-2 Dừng hoạt động
-        if(role.permissions.includes("products_edit"))
-          a.btn.btn-warning(href=`/admin/products/edit/${product.id}`) Chỉnh sửa
+          if(product.status)
+            p.mb-2 Trạng thái:
+              if(product.status === "active")
+                span.badge.badge-success.ml-2 Hoạt động
+              else
+                span.badge.badge-danger.ml-2 Dừng hoạt động
+
+          if(role.permissions.includes("products_edit"))
+            a.btn.btn-warning(href=`/admin/products/edit/${product.id}`) Chỉnh sửa
+      hr
+      .container.my-5
+        .row.justify-content-center
+          .col-10
+            +box-head("Mô tả sản phẩm")
+            .inner-desc !{product.description}
+
+
+
+
+

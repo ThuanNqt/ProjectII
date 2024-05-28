@@ -6,16 +6,19 @@ import route from "./routes/client/index.route";
 import routeAdmin from "./routes/admin/index.route";
 import methodOverride from "method-override";
 import bodyParser from "body-parser";
-const port: number | string = process.env.PORT || 3000;
 
 import flash from "express-flash";
 import cookieParser from "cookie-parser";
 import session from "express-session";
+import moment from "moment";
+import { formatMoney } from "./helpers/formatMoney";
+
+const port: number | string = process.env.PORT || 3000;
 const app: Express = express();
 const path = require("path");
-import moment from "moment";
 // App locals variables
 app.locals.moment = moment;
+app.locals.formatMoney = formatMoney;
 
 // config tinymce
 app.use(

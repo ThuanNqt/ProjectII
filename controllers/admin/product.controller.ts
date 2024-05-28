@@ -6,12 +6,14 @@ import filterStatusHelper from "../../helpers/filterStatus";
 import searchHelper from "../../helpers/search";
 import pagination from "../../helpers/pagination";
 import tree from "../../helpers/createTree";
+import { priceNewProduct } from "../../helpers/product";
 
 interface IProduct {
   title: string;
   product_category_id?: string;
   description: string;
   price: number;
+  newPrice?: number;
   discountPercentage: number;
   stock: number;
   thumbnail: string;
@@ -22,20 +24,21 @@ interface IProduct {
   deletedAt: Date;
   slug: string;
   createdBy?: {
-      account_id?: string;
-      createdAt?: Date;
+    account_id?: string;
+    createdAt?: Date;
   };
   deletedBy?: {
-      account_id?: string;
-      deletedAt?: Date;
+    account_id?: string;
+    deletedAt?: Date;
   };
   updatedBy?: {
-      account_id?: string;
-      updatedAt?: Date;
-      accountEditFullName?: string;
+    account_id?: string;
+    updatedAt?: Date;
+    accountEditFullName?: string;
   }[];
   accountFullName?: string;
   save?(): Promise<IProduct>;
+  category?: ICategory;
 }
 
 interface IFind {
@@ -46,12 +49,12 @@ interface IFind {
 }
 
 interface ICategory {
-  title: String;
+  title: string;
   parent_id: string;
-  description: String;
-  thumbnail: String;
-  status: String;
-  position: Number;
+  description: string;
+  thumbnail: string;
+  status: string;
+  position: number;
   slug: string;
   deleted: boolean;
   deletedAt: Date;
@@ -99,29 +102,28 @@ export const index = async (req: Request, res: Response) => {
   const countProduct = await Product.countDocuments(find);
   const objPagination = pagination(req.query, countProduct);
 
-  const products:IProduct[] = await Product.find(find)
+  const products: IProduct[] = (await Product.find(find)
     .sort(sort as any)
     .limit(objPagination.limitItems)
-    .skip(objPagination.skip) as IProduct[];
+    .skip(objPagination.skip)) as IProduct[];
 
-  for(const product of products){
+  for (const product of products) {
     const createdByAccount = await Account.findOne({
-      _id: product.createdBy.account_id
-    })
+      _id: product.createdBy.account_id,
+    });
 
-    if(createdByAccount){
+    if (createdByAccount) {
       product.accountFullName = createdByAccount.fullName;
     }
 
     const lastUpdatedByAccount = product.updatedBy.slice(-1)[0];
-    if(lastUpdatedByAccount){
+    if (lastUpdatedByAccount) {
       const userUpdated = await Account.findOne({
         _id: lastUpdatedByAccount.account_id,
-      })
+      });
       lastUpdatedByAccount.accountEditFullName = userUpdated.fullName;
     }
   }
-
 
   res.render("admin/pages/products/index.pug", {
     pageTitle: "Danh sách sản phẩm",
@@ -144,14 +146,14 @@ export const changeStatus = async (req: Request, res: Response) => {
     };
 
     await Product.updateOne(
-      {_id: id},
+      { _id: id },
       {
         status: status,
         $push: {
-          updatedBy: updatedBy
-        }
+          updatedBy: updatedBy,
+        },
       }
-    )
+    );
 
     req.flash("success", "Cập nhật trạng thái thành công!");
   } catch (error) {
@@ -167,10 +169,13 @@ export const deleteProduct = async (req: Request, res: Response) => {
     const id: string = req.params.id;
     await Product.updateOne(
       { _id: id },
-      { deleted: true, deletedBy:{
-        account_id: res.locals.user.id,
-        deletedAt: Date.now()
-      } }
+      {
+        deleted: true,
+        deletedBy: {
+          account_id: res.locals.user.id,
+          deletedAt: Date.now(),
+        },
+      }
     );
     req.flash("success", "Xóa sản phẩm thành công!");
   } catch (error) {
@@ -212,10 +217,10 @@ export const createPost = async (req: Request, res: Response) => {
     }
 
     req.body.createdBy = {
-      account_id: res.locals.user.id
-    }
+      account_id: res.locals.user.id,
+    };
 
-    const product:IProduct = new Product(req.body) as IProduct;
+    const product: IProduct = new Product(req.body) as IProduct;
     await product.save();
 
     req.flash("success", `Tạo sản phẩm thành công!`);
@@ -234,11 +239,13 @@ export const edit = async (req: Request, res: Response) => {
       _id: id,
     };
 
-    const product:IProduct = await Product.findOne(find);
+    const product: IProduct = await Product.findOne(find);
 
     //Lấy ra danh mục sản phẩm
-    const category: ICategory[] = await ProductCategory.find({ deleted: false });
-    const newCategory:ICategory[] = tree(category);
+    const category: ICategory[] = await ProductCategory.find({
+      deleted: false,
+    });
+    const newCategory: ICategory[] = tree(category);
 
     res.render("admin/pages/products/edit", {
       pageTitle: "Chỉnh sửa sản phẩm",
@@ -263,12 +270,15 @@ export const editPatch = async (req: Request, res: Response) => {
       updatedAt: Date.now(),
     };
 
-    await Product.updateOne({ _id: req.params.id }, {
-      ...req.body,
-      $push: {
-        updatedBy: updatedBy
+    await Product.updateOne(
+      { _id: req.params.id },
+      {
+        ...req.body,
+        $push: {
+          updatedBy: updatedBy,
+        },
       }
-    });
+    );
 
     req.flash("success", `Cập nhật sản phẩm thành công!`);
   } catch (error) {
@@ -287,6 +297,18 @@ export const detail = async (req: Request, res: Response) => {
     };
 
     const product: IProduct = await Product.findOne(find);
+
+    //Lấy ra danh mục sản phẩm
+    if (product.product_category_id) {
+      const category: ICategory = await ProductCategory.findOne({
+        _id: product.product_category_id,
+        status: "active",
+        deleted: false,
+      });
+      product.category = category;
+    }
+
+    product.newPrice = parseInt(priceNewProduct(product));
 
     res.render("admin/pages/products/detail", {
       pageTitle: product.title,
