@@ -9,7 +9,7 @@ block main
   .container.my-5
     .row
       .col-12
-        +box-head("Đặt hàng")
+        +box-head("Thông tin đơn hàng")
     .row
       .col-12
         table(class="table table-bordered text-center table-hover")
@@ -29,17 +29,17 @@ block main
                   td
                     img(src=item.productInfo.thumbnail, alt=item.productInfo.title  width="80px")
                   td #{item.productInfo.title}
-                  td #{item.productInfo.newPrice}$
+                  td #{formatMoney(item.productInfo.newPrice)}
                   td #{item.quantity}
-                  td #{item.totalPrice}$
+                  td #{formatMoney(item.totalPrice)}
             else
               tr
                 td(
                   colspan="7"
                   class="text-center"
-                ) Giỏ hàng đang trống
+                ) Đơn hàng đang trống
         if(cartDetail.products.length > 0)
-          h3(class="text-right text-success font-weight-bold") Tổng tiền: #{cartDetail.totalPrice}$
+          h3(class="text-right text-success font-weight-bold") Tổng tiền: #{formatMoney(cartDetail.totalPrice)}
 
     .row
       if(cartDetail.products.length > 0)
@@ -75,6 +75,7 @@ block main
                         id="phone"
                         name="phone"
                         required
+                        pattern="/(03|07|08|09|01[2|6|8|9])+([0-9]{8})\b/g"
                       )
                     div(class="form-group")
                       label(for="address") Địa chỉ*

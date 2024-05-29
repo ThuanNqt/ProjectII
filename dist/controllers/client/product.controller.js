@@ -61,14 +61,12 @@ exports.detail = detail;
 const category = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const slug = req.params.slugCategory;
-        console.log(slug);
         const findSlugCategory = {
             slug: slug,
             deleted: false,
             status: "active",
         };
         const category = yield product_category_model_1.default.findOne(findSlugCategory).exec();
-        console.log(category);
         const productCategory = yield (0, product_category_1.getSubCategory)(category.id);
         const productCategoryIds = productCategory.map((item) => item.id);
         const products = yield product_model_1.default.find({

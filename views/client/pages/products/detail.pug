@@ -21,10 +21,10 @@ block main
               a(href=`/products/${product.category.slug}`) #{product.category.title}
 
           if(product.newPrice)
-            div(class="inner-price-new") #{product.newPrice}$
+            div(class="inner-price-new") #{formatMoney(product.newPrice)}
 
           if(product.price)
-            div(class="inner-price-old") #{product.price}$
+            div(class="inner-price-old") #{formatMoney(product.price)}
 
           if(product.discountPercentage)
             div(class="inner-percent") Giảm tới: <span>#{product.discountPercentage}%</span>

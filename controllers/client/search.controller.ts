@@ -3,17 +3,17 @@ import { priceNewProducts } from "../../helpers/product";
 import { Request, Response } from "express";
 
 interface IProduct {
-  title: String;
+  title: string;
   product_category_id: string;
-  description: String;
-  price: Number;
+  description: string;
+  price: number;
   newPrice?: number;
-  discountPercentage: Number;
-  stock: Number;
-  thumbnail: String;
-  status: String;
-  featured: String;
-  position: Number;
+  discountPercentage: number;
+  stock: number;
+  thumbnail: string;
+  status: string;
+  featured: string;
+  position: number;
   deleted: boolean;
   deletedAt: Date;
   slug: string;
@@ -35,7 +35,7 @@ export const index = async (req: Request, res: Response) => {
       deleted: false,
     });
 
-    newProducts = await priceNewProducts(products);
+    newProducts = (await priceNewProducts(products)) as IProduct[];
   }
   res.render("client/pages/search/index", {
     pageTitle: "Kết quả tìm kiếm",

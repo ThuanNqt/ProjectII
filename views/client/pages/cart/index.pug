@@ -32,7 +32,7 @@ block main
                     img(src=item.productInfo.thumbnail, alt=item.productInfo.title  width="80px")
                   td
                     a(href=`/products/detail/${item.productInfo.slug}`) #{item.productInfo.title}
-                  td #{item.productInfo.newPrice}$
+                  td #{formatMoney(item.productInfo.newPrice)}
                   td
                     input(
                       type="number"
@@ -44,7 +44,7 @@ block main
                       product_id=item.product_id
                       style="width: 60px"
                     )
-                  td #{item.totalPrice}$
+                  td #{formatMoney(item.totalPrice)}
                   td
                     a(
                       href=`/cart/delete/${item.product_id}`
@@ -57,7 +57,7 @@ block main
                   class="text-center"
                 ) Giỏ hàng đang trống
         if(cartDetail.products.length > 0)
-          h3(class="text-right text-success font-weight-bold") Tổng tiền: #{cartDetail.totalPrice}$
+          h3(class="text-right text-success font-weight-bold") Tổng tiền: #{formatMoney(cartDetail.totalPrice)}
           div(class="text-right mt-3")
             a(
               href="/checkout"

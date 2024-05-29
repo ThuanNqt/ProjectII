@@ -5,7 +5,7 @@ block main
   .container.my-3
     .row
       .col-12
-        +box-head("Mua hàng thành công")
+        +box-head("Đặt hàng thành công")
     .row
       .col-12
         div(class="alert alert-success") Đơn hàng của bạn đã được đặt thành công. Chúng tôi sẽ xử lý đơn hàng và bàn giao cho đơn vị vận chuyển trong thời gian sớm nhất.
@@ -48,9 +48,9 @@ block main
                     td.align-middle
                       img(src=item.productInfo.thumbnail, alt=item.productInfo.title  width="80px")
                     td.align-middle #{item.productInfo.title}
-                    td.align-middle #{item.newPrice}$
+                    td.align-middle #{formatMoney(item.newPrice)}
                     td.align-middle #{item.quantity}
-                    td.align-middle #{item.totalPriceProduct}$
+                    td.align-middle #{formatMoney(item.totalPriceProduct)}
           if(order.products.length > 0)
-            h3(class="text-right font-weight-bold text-success") Tổng tiền: #{order.totalPriceCart}$
+            h3(class="text-right font-weight-bold text-success") Tổng tiền: #{formatMoney(order.totalPriceCart)}
 

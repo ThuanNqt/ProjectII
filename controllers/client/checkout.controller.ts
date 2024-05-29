@@ -235,13 +235,13 @@ export const success = async (req: Request, res: Response) => {
             }</td>
             <td style="border: 1px solid black;" class="align-middle">${
               product.newPrice
-            }$</td>
+            }</td>
             <td style="border: 1px solid black;" class="align-middle">${
               product.quantity
             }</td>
             <td style="border: 1px solid black;" class="align-middle">${
               product.totalPriceProduct
-            }$</td>
+            }</td>
         </tr>
     `;
     }
@@ -264,7 +264,7 @@ export const success = async (req: Request, res: Response) => {
             ${rows}
         </tbody>
     </table>
-    <h3 class="text-right font-weight-bold text-success">Tổng tiền: ${order.totalPriceCart}$</h3>
+    <h3 class="text-right font-weight-bold text-success">Tổng tiền: ${order.totalPriceCart}</h3>
 `;
     sendMail(user.email, subject, html);
   } catch (error) {
@@ -373,7 +373,7 @@ export const createPaymentUrl = async (req: Request, res: Response) => {
   let vnpUrl = process.env.vnp_Url;
   let returnUrl = process.env.vnp_ReturnUrl;
   let orderId = order.id;
-  let amount = totalPrice * 1000;
+  let amount = totalPrice;
   let bankCode = "NCB";
 
   let locale = "vn";
@@ -500,13 +500,13 @@ export const vnpayReturn = async (req: Request, res: Response) => {
                   }</td>
                   <td style="border: 1px solid black;" class="align-middle">${
                     product.newPrice
-                  }$</td>
+                  }</td>
                   <td style="border: 1px solid black;" class="align-middle">${
                     product.quantity
                   }</td>
                   <td style="border: 1px solid black;" class="align-middle">${
                     product.totalPriceProduct
-                  }$</td>
+                  }</td>
               </tr>
           `;
           }
@@ -529,7 +529,7 @@ export const vnpayReturn = async (req: Request, res: Response) => {
                   ${rows}
               </tbody>
           </table>
-          <h3 class="text-right font-weight-bold text-success">Tổng tiền: ${order.totalPriceCart}$</h3>
+          <h3 class="text-right font-weight-bold text-success">Tổng tiền: ${order.totalPriceCart}</h3>
       `;
           sendMail(user.email, subject, html);
         } catch (error) {

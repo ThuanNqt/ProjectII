@@ -20,16 +20,16 @@ interface IProduct {
 }
 
 interface IFind {
-  featured: string;
+  featured?: string;
   deleted: boolean;
-  status: string;
+  status?: string;
 }
 
-const limitItem: number = 6;
+const limitItem: number = 12;
 
 // [GET] /
 export const index = async (req: Request, res: Response) => {
-  // Get 6 products featured
+  // Get products featured
   const findProductsFeatured: IFind = {
     featured: "1",
     deleted: false,
@@ -48,9 +48,7 @@ export const index = async (req: Request, res: Response) => {
     status: "active",
   };
 
-  const productsNew = await Product.find(findProductsNew)
-    .sort({ position: "desc" })
-    .limit(limitItem);
+  const productsNew = await Product.find(findProductsNew).limit(limitItem);
 
   const newProductsNew: IProduct[] = priceNewProducts(productsNew);
 

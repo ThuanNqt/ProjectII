@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.index = void 0;
 const product_model_1 = __importDefault(require("../../models/product.model"));
 const product_1 = require("../../helpers/product");
-const limitItem = 6;
+const limitItem = 12;
 const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const findProductsFeatured = {
         featured: "1",
@@ -28,9 +28,7 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         deleted: false,
         status: "active",
     };
-    const productsNew = yield product_model_1.default.find(findProductsNew)
-        .sort({ position: "desc" })
-        .limit(limitItem);
+    const productsNew = yield product_model_1.default.find(findProductsNew).limit(limitItem);
     const newProductsNew = (0, product_1.priceNewProducts)(productsNew);
     res.render("client/pages/home/index", {
         pageTitle: "Trang chủ",

@@ -16,17 +16,17 @@ interface IProductCart {
 }
 
 interface IProduct {
-  title: String;
+  title: string;
   product_category_id: string;
-  description: String;
-  price: Number;
+  description: string;
+  price: number;
   newPrice?: number;
-  discountPercentage: Number;
-  stock: Number;
-  thumbnail: String;
-  status: String;
-  featured: String;
-  position: Number;
+  discountPercentage: number;
+  stock: number;
+  thumbnail: string;
+  status: string;
+  featured: string;
+  position: number;
   deleted: boolean;
   deletedAt: Date;
   slug: string;
@@ -35,7 +35,7 @@ interface IProduct {
 // [GET] /cart
 export const index = async (req: Request, res: Response) => {
   const cart: ICart = await Cart.findOne({
-    _id: req.cookies.cartId
+    _id: req.cookies.cartId,
   });
 
   //Get product
@@ -76,6 +76,8 @@ export const addPost = async (req: Request, res: Response) => {
   const quantity = parseInt(req.body.quantity);
 
   const cart: ICart = await Cart.findOne({ _id: cartId });
+
+  // Đã tồn tại sản phẩm đó trong giỏ hàng
   const existProductInCart = cart.products.find(
     (item) => item.product_id == productId
   );
@@ -107,7 +109,7 @@ export const addPost = async (req: Request, res: Response) => {
     );
   }
 
-  req.flash("success", "Thêm sản phẩm vào giỏ hàng thành công");
+  req.flash("success", "Đã thêm sản phẩm vào giỏ hàng");
   res.redirect("back");
 };
 
@@ -125,7 +127,7 @@ export const deleteItem = async (req: Request, res: Response) => {
       }
     );
 
-    req.flash("success", "Xóa sản phẩm khỏi giỏ hàng thành công");
+    req.flash("success", "Đã xóa sản phẩm khỏi giỏ hàng");
   } catch (error) {
     req.flash("error", "Xóa sản phẩm khỏi giỏ hàng thất bại");
   }
@@ -147,9 +149,9 @@ export const updateQuantity = async (req: Request, res: Response) => {
         "products.$.quantity": quantity,
       }
     );
-    req.flash("success", "Cập nhật giỏ hàng thành công");
+    req.flash("success", "Thay đổi số lượng thành công");
   } catch (error) {
-    req.flash("error", "Cập nhật giỏ hàng thất bại");
+    req.flash("error", "Thay đổi số lượng thất bại");
   }
   res.redirect("back");
 };

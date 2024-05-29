@@ -132,9 +132,9 @@ const success = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             <td style="border: 1px solid black;" class="align-middle">${i + 1}</td>
             <td style="border: 1px solid black;" class="align-middle"><img src="${product.productInfo.thumbnail}" alt="${product.productInfo.title}" width="80px"></td>
             <td style="border: 1px solid black;" class="align-middle">${product.productInfo.title}</td>
-            <td style="border: 1px solid black;" class="align-middle">${product.newPrice}$</td>
+            <td style="border: 1px solid black;" class="align-middle">${product.newPrice}</td>
             <td style="border: 1px solid black;" class="align-middle">${product.quantity}</td>
-            <td style="border: 1px solid black;" class="align-middle">${product.totalPriceProduct}$</td>
+            <td style="border: 1px solid black;" class="align-middle">${product.totalPriceProduct}</td>
         </tr>
     `;
         }
@@ -156,7 +156,7 @@ const success = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             ${rows}
         </tbody>
     </table>
-    <h3 class="text-right font-weight-bold text-success">Tổng tiền: ${order.totalPriceCart}$</h3>
+    <h3 class="text-right font-weight-bold text-success">Tổng tiền: ${order.totalPriceCart}</h3>
 `;
         (0, sendEmail_1.sendMail)(user.email, subject, html);
     }
@@ -234,7 +234,7 @@ const createPaymentUrl = (req, res) => __awaiter(void 0, void 0, void 0, functio
     let vnpUrl = process.env.vnp_Url;
     let returnUrl = process.env.vnp_ReturnUrl;
     let orderId = order.id;
-    let amount = totalPrice * 1000;
+    let amount = totalPrice;
     let bankCode = "NCB";
     let locale = "vn";
     let currCode = "VND";
@@ -326,9 +326,9 @@ const vnpayReturn = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                   <td style="border: 1px solid black;" class="align-middle">${i + 1}</td>
                   <td style="border: 1px solid black;" class="align-middle"><img src="${product.productInfo.thumbnail}" alt="${product.productInfo.title}" width="80px"></td>
                   <td style="border: 1px solid black;" class="align-middle">${product.productInfo.title}</td>
-                  <td style="border: 1px solid black;" class="align-middle">${product.newPrice}$</td>
+                  <td style="border: 1px solid black;" class="align-middle">${product.newPrice}</td>
                   <td style="border: 1px solid black;" class="align-middle">${product.quantity}</td>
-                  <td style="border: 1px solid black;" class="align-middle">${product.totalPriceProduct}$</td>
+                  <td style="border: 1px solid black;" class="align-middle">${product.totalPriceProduct}</td>
               </tr>
           `;
                     }
@@ -350,7 +350,7 @@ const vnpayReturn = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                   ${rows}
               </tbody>
           </table>
-          <h3 class="text-right font-weight-bold text-success">Tổng tiền: ${order.totalPriceCart}$</h3>
+          <h3 class="text-right font-weight-bold text-success">Tổng tiền: ${order.totalPriceCart}</h3>
       `;
                     (0, sendEmail_1.sendMail)(user.email, subject, html);
                 }

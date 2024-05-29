@@ -3,7 +3,6 @@ import Product from "../../models/product.model";
 import ProductCategory from "../../models/product-category.model";
 import { priceNewProducts, priceNewProduct } from "../../helpers/product";
 import { getSubCategory } from "../../helpers/product-category";
-import { get } from "mongoose";
 
 interface IProduct {
   title: string;
@@ -96,7 +95,6 @@ export const detail = async (req: Request, res: Response) => {
 export const category = async (req: Request, res: Response) => {
   try {
     const slug: string = req.params.slugCategory;
-    console.log(slug);
 
     // Lấy ra danh mục mà người dùng chọn
     const findSlugCategory: IFind = {
@@ -106,7 +104,6 @@ export const category = async (req: Request, res: Response) => {
     };
 
     const category = await ProductCategory.findOne(findSlugCategory).exec();
-    console.log(category);
 
     // Từ danh mục mà người dùng chọn, lấy ra tất cả danh mục con của nó
     const productCategory = await getSubCategory(category.id);

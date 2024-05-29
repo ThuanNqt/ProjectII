@@ -18,7 +18,7 @@ const product_model_1 = __importDefault(require("../../models/product.model"));
 const product_1 = require("../../helpers/product");
 const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const cart = yield cart_model_1.default.findOne({
-        _id: req.cookies.cartId
+        _id: req.cookies.cartId,
     });
     if (cart.products.length > 0) {
         for (const item of cart.products) {
@@ -68,7 +68,7 @@ const addPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             $push: { products: objectCart },
         });
     }
-    req.flash("success", "Thêm sản phẩm vào giỏ hàng thành công");
+    req.flash("success", "Đã thêm sản phẩm vào giỏ hàng");
     res.redirect("back");
 });
 exports.addPost = addPost;
@@ -81,7 +81,7 @@ const deleteItem = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         }, {
             $pull: { products: { product_id: productId } },
         });
-        req.flash("success", "Xóa sản phẩm khỏi giỏ hàng thành công");
+        req.flash("success", "Đã xóa sản phẩm khỏi giỏ hàng");
     }
     catch (error) {
         req.flash("error", "Xóa sản phẩm khỏi giỏ hàng thất bại");
@@ -100,10 +100,10 @@ const updateQuantity = (req, res) => __awaiter(void 0, void 0, void 0, function*
         }, {
             "products.$.quantity": quantity,
         });
-        req.flash("success", "Cập nhật giỏ hàng thành công");
+        req.flash("success", "Thay đổi số lượng thành công");
     }
     catch (error) {
-        req.flash("error", "Cập nhật giỏ hàng thất bại");
+        req.flash("error", "Thay đổi số lượng thất bại");
     }
     res.redirect("back");
 });

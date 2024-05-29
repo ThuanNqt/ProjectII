@@ -25,7 +25,7 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             status: "active",
             deleted: false,
         });
-        newProducts = yield (0, product_1.priceNewProducts)(products);
+        newProducts = (yield (0, product_1.priceNewProducts)(products));
     }
     res.render("client/pages/search/index", {
         pageTitle: "Kết quả tìm kiếm",
