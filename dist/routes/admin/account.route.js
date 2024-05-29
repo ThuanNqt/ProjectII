@@ -38,5 +38,5 @@ router.delete("/delete/:id", controller.deleteAccount);
 router.patch("/change-status/:status/:id", controller.changeStatus);
 router.get("/detail/:id", controller.detail);
 router.get("/edit/:id", controller.edit);
-router.patch("/edit/:id", upload.single("avatar"), uploadCloud.upload, validate.editPatch, controller.editPatch);
+router.patch("/edit/:id", upload.single("avatar"), uploadCloud.upload, validate.createPost, controller.editPatch);
 exports.accountRoutes = router;

@@ -226,10 +226,10 @@ export const editPatch = async (req: Request, res: Response) => {
       }
       await Account.updateOne({ _id: req.params.id }, req.body);
       req.flash("success", "Cập nhật tài khoản thành công!");
+      res.redirect("/admin/accounts");
     }
   } catch (error) {
     req.flash("error", "Cập nhật tài khoản thất bại!");
     res.redirect(`/admin/accounts`);
   }
-  res.redirect("back");
 };

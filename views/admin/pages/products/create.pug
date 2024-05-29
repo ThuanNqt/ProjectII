@@ -1,7 +1,10 @@
 extends ../../layouts/default.pug
 include ../../mixins/select-tree.pug
+include ../../mixins/alert.pug
 
 block main
+  +alert-success(2000)
+  +alert-error(2000)
   if(role.permissions.includes("products_create"))
     .card.my-5
       .card-header Thêm mới sản phẩm
@@ -50,7 +53,8 @@ block main
               id="price"
               name="price"
               value="0"
-              min="0"
+              min="1000"
+              required
             )
 
           div(class="form-group")
@@ -72,7 +76,8 @@ block main
               id="stock"
               name="stock"
               value="0"
-              min="0"
+              min="1"
+              required
             )
 
           div(

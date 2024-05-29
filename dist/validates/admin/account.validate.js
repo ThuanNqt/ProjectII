@@ -9,37 +9,36 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.editPatch = exports.createPost = void 0;
+exports.createPost = void 0;
+const checkValidateRegex_1 = require("../../helpers/checkValidateRegex");
 const createPost = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body.fullName) {
-        req.flash("error", "Tên không được để trống");
+        req.flash("error", "Vui lòng nhập tên tài khoản");
         res.redirect("back");
         return;
     }
     if (!req.body.email) {
-        req.flash("error", "Email không được để trống");
+        req.flash("error", "Vui lòng nhập email");
         res.redirect("back");
         return;
     }
+    else {
+        if (!(0, checkValidateRegex_1.regexEmail)(req.body.email)) {
+            req.flash("error", "Email không đúng định dạng");
+            res.redirect("back");
+            return;
+        }
+    }
     if (!req.body.password) {
-        req.flash("error", "Mật khẩu không được để trống");
+        req.flash("error", "Vui lòng nhập mật khẩu");
+        res.redirect("back");
+        return;
+    }
+    if (req.body.password < 5) {
+        req.flash("error", "Mật khẩu phải lớn hơn 5 ký tự");
         res.redirect("back");
         return;
     }
     next();
 });
 exports.createPost = createPost;
-const editPatch = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.body.fullName) {
-        req.flash("error", "Tên không được để trống");
-        res.redirect("back");
-        return;
-    }
-    if (!req.body.email) {
-        req.flash("error", "Email không được để trống");
-        res.redirect("back");
-        return;
-    }
-    next();
-});
-exports.editPatch = editPatch;
