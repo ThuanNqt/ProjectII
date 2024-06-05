@@ -1,0 +1,16 @@
+//- mixins/carousel.pug
+mixin carousel(id, slides)
+  div(id=id class='carousel slide' data-ride='carousel' data-interval='2000')
+    ol.carousel-indicators
+      each slide, index in slides
+        li(data-target=`#${id}` data-slide-to=index class=(index === 0 ? 'active' : ''))
+    .carousel-inner
+      each slide, index in slides
+        .carousel-item(class=(index === 0 ? 'active' : ''))
+          img(src=slide.img class='d-block w-100' alt=slide.alt)
+    button.carousel-control-prev(type='button' data-target=`#${id}` data-slide='prev')
+      span.carousel-control-prev-icon(aria-hidden='true')
+      span.sr-only Previous
+    button.carousel-control-next(type='button' data-target=`#${id}` data-slide='next')
+      span.carousel-control-next-icon(aria-hidden='true')
+      span.sr-only Next

@@ -1,8 +1,19 @@
 extends ../../layouts/default.pug
 include ../../mixins/box-head.pug
 include ../../mixins/product-layout.pug
+include ../../mixins/carousel.pug
+
 
 block main
+  .container.my-5
+    +carousel('carouselExampleIndicators', [
+      { img: 'images/14-ULTRA-1200-300-1200x300.png', alt: 'First slide' },
+      { img: 'images/638528288805603288_X7b C1.webp', alt: 'Second slide' },
+      { img: 'images/638528288805603288_X7b C1.webp', alt: 'Third slide' },
+      { img: 'images/638528006748636482_F-C1_1200x300.webp', alt: 'slide 4' },
+      { img: 'images/638527974043790197_F-C1_1200x300.webp', alt: 'slide 5' },
+      { img: 'images/638527863661609934_F-C1_1200x300.webp', alt: 'slide 6' },
+    ])
   .container.my-5
     .row
       .col-12
