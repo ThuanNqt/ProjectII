@@ -1,52 +1,96 @@
 include ../mixins/sub-menu.pug
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-header.header
-  .container
-    .row
-      .col-3
-        .inner-logo
-          a(href="/")
-            img(src="/images/NQT-meme.jpg" alt="Logo")
-      .col-9
-        .inner-menu
-          ul
-            li
-              a(href="/") Trang chủ
-            li(class="sub-menu")
-              - const pathProduct = "/products";
-              a(href="/products") Sản phẩm
-              +sub-menu(layoutProductsCategory, pathProduct)
-            li
-              a(href="/cart") <i class="fa-solid fa-cart-shopping"></i> (#{miniCart ? miniCart.totalQuantity : 0})
-            if(user)
-              li
-                a(href="/user/info") #{user.fullName}
-              li
-                a(href="/user/logout") Đăng xuất
-            else
-              li
-                a(href="/user/login") Đăng nhập
-              li
-                a(href="/user/register") Đăng ký
+//- header.header
+  //- .container
+  //-   .row
+  //-     .col-3
+  //-       .inner-logo
+  //-         a(href="/")
+  //-           img(src="/images/NQT-meme.jpg" alt="Logo")
+  //-     .col-9
+  //-       .inner-menu
+  //-         ul
+  //-           li
+  //-             a(href="/") Trang chủ
+  //-           li(class="sub-menu")
+  //-             - const pathProduct = "/products";
+  //-             a(href="/products") Sản phẩm
+  //-             +sub-menu(layoutProductsCategory, pathProduct)
+  //-           li
+  //-             a(href="/cart") <i class="fa-solid fa-cart-shopping"></i> (#{miniCart ? miniCart.totalQuantity : 0})
+  //-           if(user)
+  //-             li
+  //-               a(href="/user/info") #{user.fullName}
+  //-             li
+  //-               a(href="/user/logout") Đăng xuất
+  //-           else
+  //-             li
+  //-               a(href="/user/login") Đăng nhập
+  //-             li
+  //-               a(href="/user/register") Đăng ký
 
-    .row
-      .col-3
-        h3.title-logo Tech Store
-      .col-6
-        form(
-          action="/search"
-          method="GET"
-        )
-          div(class="form-group d-flex mb-0")
-            input(
-              type="text"
-              class="form-control"
-              placeholder="Tìm kiếm sản phẩm"
-              name="keyword"
-              value=keyword
-            )
-            button(
-              type="submit"
-              class="btn btn-primary"
-            ) <i class="fa-solid fa-magnifying-glass"></i>
+  //-   .row
+  //-     .col-3
+  //-       h3.title-logo Tech Store
+  //-     .col-6
+  //-       form(
+  //-         action="/search"
+  //-         method="GET"
+  //-       )
+  //-         div(class="form-group d-flex mb-0")
+  //-           input(
+  //-             type="text"
+  //-             class="form-control"
+  //-             placeholder="Tìm kiếm sản phẩm"
+  //-             name="keyword"
+  //-             value=keyword
+  //-           )
+  //-           button(
+  //-             type="submit"
+  //-             class="btn btn-primary"
+  //-           ) <i class="fa-solid fa-magnifying-glass"></i>
+header
+  .brand
+    a(href='/')
+      span.fa-solid.fa-bag-shopping
+      h1 TShop
+  span#menuIcon.fas.fa-bars(onclick='toggle()')
+  #nav.navbar
+    .searchBox
+      form(action="/search" method="GET")
+        input(type='text' placeholder='Tìm kiếm sản phẩm' name="keyword")
+        button(type="submit")
+          span#searchIcon.fa-solid.fa-magnifying-glass
+    ul
+      li
+        a(href='/')
+          span#headIcon.fas.fa-home
+          | Trang chủ
+      li
+        a(href='/products')
+          span#headIcon.fa-brands.fa-product-hunt
+          | Sản phẩm
+      li
+        a(href='/cart')
+          span#headIcon.fa-solid.fa-cart-shopping (#{miniCart ? miniCart.totalQuantity : 0})
+          | Giỏ hàng
+      if(user)
+        li
+          a(href="/user/info")
+            - var lastName = user.fullName.split(' ').pop()
+            span#headIcon.fa-solid.fa-user
+            | #{lastName}
+        li
+          a(href="/user/logout")
+            span#headIcon.fas.fa-sign-out
+            | Đăng xuất
+      else
+        li
+          a(href="/user/login")
+            span#headIcon.fa-solid.fa-user-shield
+            | Đăng nhập
+        li
+          a(href="/user/register")
+            span#headIcon.fa-solid.fa-user-plus
+            | Đăng ký

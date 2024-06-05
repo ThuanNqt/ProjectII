@@ -44,7 +44,7 @@ body {
 }
 
 /*Header*/
-.header {
+/* .header {
   border-bottom: 1px solid #ddd;
   padding: 10px 0;
 }
@@ -70,7 +70,188 @@ body {
 
 .header .inner-menu > ul > li {
   margin-left: 20px;
+} */
+
+header {
+  position: relative;
+  width: 100%;
+  height: 70px;
+  /* background: rgb(8, 9, 19); */
+  background: rgb(62, 190, 62);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
+.brand {
+  height: 100%;
+  padding-left: 4%;
+  width: 20%;
+}
+
+.brand a {
+  color: white;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.brand .fa-bag-shopping {
+  font-size: 35px;
+}
+.brand h1 {
+  margin-left: 5%;
+}
+.navbar {
+  position: relative;
+  width: 70%;
+  padding: 0 5%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.searchBox {
+  position: relative;
+  width: 40%;
+  display: flex;
+  align-items: center;
+}
+
+.searchBox form {
+  width: 100%;
+}
+
+.searchBox input {
+  width: 100%;
+  height: 35px;
+  border: none;
+  border-radius: 8px;
+  padding: 1%;
+  text-indent: 10px;
+  font-size: 18px;
+}
+
+.searchBox button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0 10px;
+  height: 100%;
+  border: none;
+  background: none;
+  color: #333; /* Hoặc màu sắc bạn muốn */
+  cursor: pointer;
+}
+
+#searchIcon {
+  position: relative;
+  left: -3px;
+  font-size: 22px;
+  color: rgb(77, 77, 77);
+  cursor: pointer;
+  z-index: 998;
+}
+.navbar ul {
+  width: 60%;
+  text-align: center;
+  margin-bottom: 0;
+}
+.navbar ul li {
+  display: inline-block;
+  margin-left: 4%;
+  transition: all 0.5s ease;
+  text-align: center;
+  cursor: pointer;
+  padding: 1%;
+  height: 30px;
+  overflow: hidden;
+}
+.navbar ul li:hover {
+  height: 45px;
+}
+
+.navbar ul li #headIcon {
+  display: block;
+  font-size: 21px;
+}
+
+.navbar ul li a {
+  text-decoration: none;
+  font-size: 16px;
+  color: white;
+}
+.navbar ul li a:active,
+:focus {
+  text-decoration: underline;
+  font-weight: 700;
+}
+#menuIcon {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    position: relative;
+    display: block;
+    width: 60%;
+    display: none;
+    z-index: 9999;
+  }
+  .navbar.navactive {
+    display: inline;
+  }
+  .searchBox {
+    position: relative;
+    width: 100%;
+    top: 60px;
+    z-index: 998;
+    left: 5%;
+  }
+  #menuIcon {
+    display: inline;
+    position: fixed;
+    font-size: 25px;
+    margin-left: 88%;
+    z-index: 99999;
+    float: right;
+    padding: 1%;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid rgb(221, 221, 221);
+  }
+  .navbar ul {
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+    /* background-color: rgb(8, 9, 19); */
+    background: rgb(62, 190, 62);
+  }
+  .navbar ul li {
+    display: block;
+    margin-top: 20px;
+    width: 100%;
+    height: 40px;
+    text-align: left;
+    position: relative;
+    top: 50px;
+    padding: 2%;
+  }
+  .navbar ul li #headIcon {
+    display: inline-block;
+    font-size: 20px;
+  }
+  .navbar ul li:hover {
+    /* background: rgb(35, 36, 51); */
+    background: rgb(66, 101, 66);
+  }
+  .navbar ul li a {
+    margin-left: 40px;
+    font-family: 600;
+  }
+}
+
 /*End Header*/
 
 /*Footer*/
