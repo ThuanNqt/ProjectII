@@ -2,6 +2,7 @@ extends ../../layouts/default.pug
 include ../../mixins/box-head.pug
 include ../../mixins/product-layout.pug
 include ../../mixins/carousel.pug
+include ../../mixins/sort.pug
 
 block main
   .section-products-featured.my-5
@@ -14,7 +15,8 @@ block main
         { img: 'images/638527974043790197_F-C1_1200x300.webp', alt: 'slide 5' },
         { img: 'images/638527863661609934_F-C1_1200x300.webp', alt: 'slide 6' },
       ])
-    .container
+
+    .container.my-5
       .row
         .col-12
           +box-head("Sản phẩm nổi bật")

@@ -35,6 +35,13 @@
   box-sizing: border-box;
 }
 
+.container {
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
 a {
   text-decoration: none;
 }
@@ -348,10 +355,19 @@ header {
 
 /*box-head*/
 .box-head {
-  margin-bottom: 20px;
-  font-size: 28px;
-  font-weight: 600;
-  color: green;
+  padding: 20px;
+  background-color: #f8f9fa; /* Màu nền nhẹ nhàng */
+  border-bottom: 2px solid #dee2e6; /* Viền dưới để phân cách */
+  margin-bottom: 20px; /* Khoảng cách với nội dung bên dưới */
+}
+
+.inner-title {
+  margin: 0; /* Loại bỏ margin mặc định */
+  color: #495057; /* Màu sắc cho tiêu đề */
+  font-size: 24px; /* Kích thước font lớn */
+  font-weight: 600; /* Độ đậm của font */
+  text-transform: uppercase; /* Chữ hoa */
+  letter-spacing: 1px; /* Khoảng cách giữa các chữ */
 }
 /*End box-head*/
 
@@ -468,6 +484,10 @@ header {
 /*End sub-menu*/
 
 /* product-detail */
+.product-detail .inner-thumb {
+  overflow: hidden;
+}
+
 .product-detail .inner-thumb img {
   width: 100%;
   aspect-ratio: 4/3;
@@ -567,7 +587,7 @@ header {
 }
 
 [show-alert] [close-alert] {
-  background: #5c5a5ac4;
+  background: #ffffffc4;
   display: inline-block;
   width: 24px;
   height: 24px;
@@ -583,7 +603,6 @@ header {
 .page_404 {
   padding: 40px 0;
   background: #fff;
-  font-family: "Arvo", serif;
 }
 
 .page_404 img {
@@ -592,8 +611,9 @@ header {
 
 .four_zero_four_bg {
   background-image: url(https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif);
-  height: 400px;
+  height: 50vh;
   background-position: center;
+  background-repeat: no-repeat;
 }
 
 .four_zero_four_bg h1 {
@@ -612,6 +632,40 @@ header {
   display: inline-block;
 }
 .contant_box_404 {
-  margin-top: -50px;
+  margin: 30px;
 }
 /* End 404 not fount*/
+
+/* Range price*/
+.range-value {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+#sliderValueMin,
+#sliderValueMax {
+  background-color: #ffffff;
+  padding: 5px 10px;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+}
+
+button[range-price] {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button[range-price]:hover {
+  background-color: #45a049;
+}
+/* End range price*/

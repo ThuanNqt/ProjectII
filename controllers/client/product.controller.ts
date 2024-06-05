@@ -40,6 +40,11 @@ interface IFind {
   status: string;
 }
 
+interface ISort {
+  [sortKey: string]: string;
+  position?: string;
+}
+
 // [GET] /products
 export const index = async (req: Request, res: Response) => {
   const find: IFind = {
@@ -47,13 +52,47 @@ export const index = async (req: Request, res: Response) => {
     deleted: false,
   };
 
-  const products = await Product.find(find).sort({ position: "desc" });
+  // Sort
+  const sort: ISort = {};
+  if (
+    typeof req.query.sortKey === "string" &&
+    typeof req.query.sortValue === "string"
+  ) {
+    const sortKey: string = req.query.sortKey;
+    const sortValue: string = req.query.sortValue;
+    sort[sortKey] = sortValue;
+  } else {
+    sort.title = "asc";
+  }
+  // End sort
+
+  const products = await Product.find(find).sort(sort as any);
 
   const newProducts: IProduct[] = priceNewProducts(products) as IProduct[];
 
+  if (sort) {
+    newProducts.sort((a, b) => {
+      if (sort["price"] === "desc") {
+        return b.newPrice - a.newPrice; // Giả sử mỗi sản phẩm trong newProducts đã có trường newPrice
+      } else if (sort["price"] === "asc") {
+        return a.newPrice - b.newPrice;
+      }
+    });
+  }
+
+  // Range price
+  let productsRange: IProduct[] = newProducts;
+  if (req.query.priceMin || req.query.priceMax) {
+    const priceMin = parseInt(req.query.priceMin as string);
+    const priceMax = parseInt(req.query.priceMax as string);
+    productsRange = newProducts.filter((product) => {
+      return product.newPrice >= priceMin && product.newPrice <= priceMax;
+    });
+  }
+
   res.render("client/pages/products/index", {
     pageTitle: "Danh sách sản phẩm",
-    products: newProducts,
+    products: productsRange,
   });
 };
 

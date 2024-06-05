@@ -22,11 +22,39 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         status: "active",
         deleted: false,
     };
-    const products = yield product_model_1.default.find(find).sort({ position: "desc" });
+    const sort = {};
+    if (typeof req.query.sortKey === "string" &&
+        typeof req.query.sortValue === "string") {
+        const sortKey = req.query.sortKey;
+        const sortValue = req.query.sortValue;
+        sort[sortKey] = sortValue;
+    }
+    else {
+        sort.title = "asc";
+    }
+    const products = yield product_model_1.default.find(find).sort(sort);
     const newProducts = (0, product_1.priceNewProducts)(products);
+    if (sort) {
+        newProducts.sort((a, b) => {
+            if (sort["price"] === "desc") {
+                return b.newPrice - a.newPrice;
+            }
+            else if (sort["price"] === "asc") {
+                return a.newPrice - b.newPrice;
+            }
+        });
+    }
+    let productsRange = newProducts;
+    if (req.query.priceMin || req.query.priceMax) {
+        const priceMin = parseInt(req.query.priceMin);
+        const priceMax = parseInt(req.query.priceMax);
+        productsRange = newProducts.filter((product) => {
+            return product.newPrice >= priceMin && product.newPrice <= priceMax;
+        });
+    }
     res.render("client/pages/products/index", {
         pageTitle: "Danh sách sản phẩm",
-        products: newProducts,
+        products: productsRange,
     });
 });
 exports.index = index;

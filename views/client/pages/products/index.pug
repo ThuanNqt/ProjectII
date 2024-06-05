@@ -2,7 +2,7 @@ extends ../../layouts/default.pug
 include ../../mixins/box-head.pug
 include ../../mixins/product-layout.pug
 include ../../mixins/carousel.pug
-
+include ../../mixins/sort.pug
 
 block main
   .container.my-5
@@ -14,8 +14,25 @@ block main
       { img: 'images/638527974043790197_F-C1_1200x300.webp', alt: 'slide 5' },
       { img: 'images/638527863661609934_F-C1_1200x300.webp', alt: 'slide 6' },
     ])
+
+  .container.my-5
+    .row
+      .col-12
+        h2 Tiêu chí tìm kiếm
+    .row
+      .col-4
+        +sort()
+      .col-2
+      .col-6
+        div#priceSlider
+        div.range-value
+          span#sliderValueMin
+          span#sliderValueMax
+        button(range-price) Tìm với khoảng giá
+
   .container.my-5
     .row
       .col-12
         +box-head(pageTitle)
     +product-grid(products)
+
