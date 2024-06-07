@@ -26,19 +26,35 @@ const register = (req, res) => {
 };
 exports.register = register;
 const registerPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const existEmail = yield user_model_1.default.findOne({
-        email: req.body.email,
-        deleted: false,
-    });
-    if (existEmail) {
-        req.flash("error", `${req.body.email} đã tồn tại!`);
-        res.redirect("back");
-        return;
+    try {
+        const existEmail = yield user_model_1.default.findOne({
+            email: req.body.email,
+            deleted: false,
+        });
+        const phoneExist = yield user_model_1.default.findOne({
+            phone: req.body.phone,
+            deleted: false,
+        });
+        if (existEmail) {
+            req.flash("error", `${req.body.email} đã tồn tại!`);
+            res.redirect("back");
+            return;
+        }
+        if (phoneExist) {
+            req.flash("error", `${req.body.phone} đã tồn tại!`);
+            res.redirect("back");
+            return;
+        }
+        req.body.password = (0, md5_1.default)(req.body.password);
+        const user = new user_model_1.default(req.body);
+        yield user.save();
+        req.flash("success", "Đăng ký thành công");
+        res.redirect("/user/login");
     }
-    req.body.password = (0, md5_1.default)(req.body.password);
-    const user = new user_model_1.default(req.body);
-    yield user.save();
-    res.redirect("/user/login");
+    catch (error) {
+        req.flash("error", "Đăng ký thất bại");
+        console.log(error);
+    }
 });
 exports.registerPost = registerPost;
 const login = (req, res) => {

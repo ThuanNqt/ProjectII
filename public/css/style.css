@@ -136,7 +136,7 @@ header {
   border: none;
   border-radius: 8px;
   padding: 1%;
-  text-indent: 10px;
+  /* text-indent: 10px; */
   font-size: 18px;
 }
 
@@ -191,7 +191,7 @@ header {
 }
 .navbar ul li a:active,
 :focus {
-  text-decoration: underline;
+  text-decoration: none;
   font-weight: 700;
 }
 #menuIcon {
@@ -359,6 +359,14 @@ header {
   background-color: #f8f9fa; /* Màu nền nhẹ nhàng */
   border-bottom: 2px solid #dee2e6; /* Viền dưới để phân cách */
   margin-bottom: 20px; /* Khoảng cách với nội dung bên dưới */
+}
+
+.box-head-center {
+  padding: 20px;
+  background-color: #f8f9fa; /* Màu nền nhẹ nhàng */
+  border-bottom: 2px solid #dee2e6; /* Viền dưới để phân cách */
+  margin-bottom: 20px; /* Khoảng cách với nội dung bên dưới */
+  text-align: center;
 }
 
 .inner-title {

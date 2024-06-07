@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { regexEmail, regexPhoneNumber } from "../../helpers/checkValidateRegex";
 
 export const registerPost = async (
   req: Request,
@@ -15,6 +16,12 @@ export const registerPost = async (
     req.flash("error", "Email không được để trống");
     res.redirect("back");
     return;
+  } else {
+    if (!regexEmail(req.body.email)) {
+      req.flash("error", "Email không đúng định dạng");
+      res.redirect("back");
+      return;
+    }
   }
 
   if (!req.body.password) {
@@ -22,6 +29,19 @@ export const registerPost = async (
     res.redirect("back");
     return;
   }
+
+  if (req.body.password < 5) {
+    req.flash("error", "Mật khẩu ít nhất 5 ký tự");
+    res.redirect("back");
+    return;
+  }
+
+  if (req.body.phone && !regexPhoneNumber(req.body.phone)) {
+    req.flash("error", "Số điện thoại không hợp lệ");
+    res.redirect("back");
+    return;
+  }
+
   next();
 };
 

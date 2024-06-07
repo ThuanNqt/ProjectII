@@ -21,20 +21,37 @@ export const register = (req: Request, res: Response) => {
 
 //[POST] /user/register
 export const registerPost = async (req: Request, res: Response) => {
-  const existEmail = await User.findOne({
-    email: req.body.email,
-    deleted: false,
-  });
-  if (existEmail) {
-    req.flash("error", `${req.body.email} đã tồn tại!`);
-    res.redirect("back");
-    return;
+  try {
+    const existEmail = await User.findOne({
+      email: req.body.email,
+      deleted: false,
+    });
+    const phoneExist = await User.findOne({
+      phone: req.body.phone,
+      deleted: false,
+    });
+    if (existEmail) {
+      req.flash("error", `${req.body.email} đã tồn tại!`);
+      res.redirect("back");
+      return;
+    }
+
+    if (phoneExist) {
+      req.flash("error", `${req.body.phone} đã tồn tại!`);
+      res.redirect("back");
+      return;
+    }
+
+    req.body.password = md5(req.body.password);
+    const user = new User(req.body);
+    await user.save();
+
+    req.flash("success", "Đăng ký thành công");
+    res.redirect("/user/login");
+  } catch (error) {
+    req.flash("error", "Đăng ký thất bại");
+    console.log(error);
   }
-  req.body.password = md5(req.body.password);
-  const user = new User(req.body);
-  await user.save();
-  //res.cookie("tokenUser", user.tokenUser);
-  res.redirect("/user/login");
 };
 
 //[GET] /user/login

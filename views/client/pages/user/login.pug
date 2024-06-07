@@ -1,5 +1,6 @@
 extends ../../layouts/default.pug
 include ../../mixins/alert.pug
+include ../../mixins/box-head.pug
 
 block main
   +alert-success(2000)
@@ -7,37 +8,35 @@ block main
 
   .container.my-5
     .row.justify-content-center
-      .col-6
-        h1(class="text-center") Đăng nhập tài khoản
+      .col-5
+        +box-head-center("Đăng nhập")
         form(
           action="/user/login"
           method="post"
         )
           div(class="form-group")
-            label(for="email") Email
+            label(for="email") Email*
             input(
               type="email"
               class="form-control"
               id="email"
               name="email"
-              placeholder="Nhập email"
-
+              required
             )
 
           div(class="form-group")
-            label(for="password") Mật khẩu
+            label(for="password") Mật khẩu*
             input(
               type="password"
               class="form-control"
               id="password"
               name="password"
-              placeholder="Nhập mật khẩu"
-
+              required
             )
 
           div(class="form-group")
             button(
               type="submit"
-              class="btn btn-primary btn-block"
+              class="btn btn-success btn-block"
             ) Đăng nhập
         a(href="/user/password/forgot") Quên mật khẩu?

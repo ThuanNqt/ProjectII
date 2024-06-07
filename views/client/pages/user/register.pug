@@ -1,5 +1,6 @@
 extends ../../layouts/default.pug
 include ../../mixins/alert.pug
+include ../../mixins/box-head.pug
 
 block main
   +alert-success(2000)
@@ -7,47 +8,63 @@ block main
 
   .container.my-5
     .row.justify-content-center
-      .col-6
-        h1(class="text-center") Đăng ký tài khoản
+      .col-5
+        +box-head-center("Đăng ký")
         form(
           action="/user/register"
           method="post"
         )
           div(class="form-group")
-            label(for="fullName") Họ và tên
+            label(for="fullName") Họ và tên*
             input(
               type="text"
               class="form-control"
               id="fullName"
               name="fullName"
-              placeholder="Nhập họ và tên"
-
+              required
             )
 
           div(class="form-group")
-            label(for="email") Email
+            label(for="email") Email*
             input(
               type="email"
               class="form-control"
               id="email"
               name="email"
-              placeholder="Nhập email"
-
+              required
             )
 
           div(class="form-group")
-            label(for="password") Mật khẩu
+            label(for="password") Mật khẩu*
             input(
               type="password"
               class="form-control"
               id="password"
               name="password"
-              placeholder="Nhập mật khẩu"
+              min="5"
+              required
+            )
 
+          div(class="form-group")
+            label(for="phone") Số điện thoại
+            input(
+              type="text"
+              class="form-control"
+              id="phone"
+              name="phone"
+            )
+
+          div(class="form-group")
+            label(for="address") Địa chỉ
+            input(
+              type="text"
+              class="form-control"
+              id="address"
+              name="address"
             )
 
           div(class="form-group")
             button(
               type="submit"
-              class="btn btn-primary btn-block"
+              class="btn btn-success btn-block"
             ) Đăng ký
