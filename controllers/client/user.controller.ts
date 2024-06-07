@@ -70,15 +70,14 @@ export const loginPost = async (req: Request, res: Response) => {
 
   res.cookie("tokenUser", userAccount.tokenUser);
 
-  //Lưu user_id vào collection carts
-  await Cart.updateOne(
-    {
-      _id: req.cookies.cartId,
-    },
-    {
-      user_id: userAccount.id,
-    }
-  );
+  const cartExist = await Cart.findOne({ user_id: userAccount.id });
+  if (cartExist) {
+    res.cookie("cartId", cartExist._id);
+  } else {
+    const cart = new Cart({ user_id: userAccount.id });
+    await cart.save();
+    res.cookie("cartId", cart._id);
+  }
 
   res.redirect("/");
 };

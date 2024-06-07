@@ -11,8 +11,8 @@ const cart_middleware_1 = require("../../middlewares/client/cart.middleware");
 const user_middleware_1 = require("../../middlewares/client/user.middleware");
 exports.default = (app) => {
     app.use(category_middleware_1.category);
-    app.use(cart_middleware_1.cartId);
     app.use(user_middleware_1.infoUser);
+    app.use(cart_middleware_1.cartId);
     app.use("/", home_route_1.homeRoutes);
     app.use("/products", product_route_1.productRoutes);
     app.use("/search", search_route_1.searchRoutes);

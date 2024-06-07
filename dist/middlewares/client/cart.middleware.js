@@ -15,25 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.cartId = void 0;
 const cart_model_1 = __importDefault(require("../../models/cart.model"));
 const cartId = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = res.locals.user;
     if (!req.cookies.cartId) {
-        let cart;
-        if (user) {
-            cart = yield cart_model_1.default.findOne({ user_id: user.id });
-            if (!cart) {
-                cart = new cart_model_1.default({ user_id: user.id });
-                yield cart.save();
-            }
-        }
-        else {
+        let cart = yield cart_model_1.default.findOne({ user_id: null });
+        if (!cart) {
             cart = new cart_model_1.default();
             yield cart.save();
         }
-        const expiresTime = 1000 * 60 * 60 * 24 * 365;
-        res.cookie("cartId", cart.id, {
-            expires: new Date(Date.now() + expiresTime),
-            httpOnly: true,
-        });
+        res.cookie("cartId", cart.id);
     }
     else {
         const cart = yield cart_model_1.default.findOne({ _id: req.cookies.cartId });

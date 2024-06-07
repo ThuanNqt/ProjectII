@@ -11,8 +11,8 @@ import { infoUser } from "../../middlewares/client/user.middleware";
 
 export default (app: Express): void => {
   app.use(category); //Luôn luôn gọi mới middleware trước khi gọi route
-  app.use(cartId);
   app.use(infoUser);
+  app.use(cartId);
   app.use("/", homeRoutes);
   app.use("/products", productRoutes);
   app.use("/search", searchRoutes);

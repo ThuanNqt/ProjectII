@@ -68,11 +68,15 @@ const loginPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return;
     }
     res.cookie("tokenUser", userAccount.tokenUser);
-    yield cart_model_1.default.updateOne({
-        _id: req.cookies.cartId,
-    }, {
-        user_id: userAccount.id,
-    });
+    const cartExist = yield cart_model_1.default.findOne({ user_id: userAccount.id });
+    if (cartExist) {
+        res.cookie("cartId", cartExist._id);
+    }
+    else {
+        const cart = new cart_model_1.default({ user_id: userAccount.id });
+        yield cart.save();
+        res.cookie("cartId", cart._id);
+    }
     res.redirect("/");
 });
 exports.loginPost = loginPost;
