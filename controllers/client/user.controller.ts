@@ -1,3 +1,4 @@
+import { cartId } from "./../../middlewares/client/cart.middleware";
 import User from "../../models/user.model";
 import md5 from "md5";
 import { Request, Response } from "express";
@@ -5,11 +6,68 @@ import Cart from "../../models/cart.model";
 import ForgotPassword from "../../models/forgot-password.model";
 import { sendMail } from "../../helpers/sendEmail";
 import { generateRandomNumber } from "../../helpers/generate";
+import Order from "../../models/order.model";
+import Product from "../../models/product.model";
 
 interface IForgotPassword {
   email: string;
   OTP: string;
   expireAt: Date;
+}
+
+interface ICart {
+  user_id?: string;
+  products: IProductCart[];
+  totalPrice?: number;
+}
+
+interface IProductCart {
+  product_id: string;
+  quantity: number;
+  totalPrice?: number;
+  productInfo?: IProduct;
+}
+
+interface IProduct {
+  title: string;
+  product_category_id: string;
+  description: string;
+  price: number;
+  newPrice?: number;
+  discountPercentage: number;
+  stock: number;
+  thumbnail: string;
+  status: string;
+  featured: string;
+  position: number;
+  deleted: boolean;
+  deletedAt: Date;
+  slug: string;
+}
+
+interface IOrder {
+  totalPriceCart?: number;
+  save?(): Promise<IOrder>;
+  id: string;
+  cart_id: string;
+  userInfo: {
+    fullName: string;
+    phone: string;
+    address: string;
+  };
+  products: {
+    totalPriceProduct?: number;
+    newPrice?: number;
+    productInfo?: IProduct;
+    product_id: string;
+    quantity: number;
+    price: number;
+    discountPercentage: number;
+  }[];
+  totalQuantityOfOrder?: number;
+  totalPriceOrder?: number;
+  paymentType?: string;
+  payment?: boolean;
 }
 
 //[GET] /user/register
@@ -107,9 +165,34 @@ export const logout = (req: Request, res: Response) => {
 };
 
 // [GET] /user/info
-export const info = (req: Request, res: Response) => {
+export const info = async (req: Request, res: Response) => {
+  const cartId = req.cookies.cartId;
+
+  const orders: IOrder[] = await Order.find({
+    cart_id: cartId,
+  });
+
+  for (const order of orders) {
+    let totalPriceOrder = 0,
+      totalQuantityOfOrder = 0;
+    for (const product of order.products) {
+      product.productInfo = await Product.findOne({
+        _id: product.product_id,
+      });
+      product.newPrice = Math.floor(
+        product.price * (1 - product.discountPercentage / 100)
+      );
+      product.totalPriceProduct = product.newPrice * product.quantity;
+
+      totalPriceOrder += product.totalPriceProduct;
+      totalQuantityOfOrder += product.quantity;
+    }
+    order.totalPriceOrder = totalPriceOrder;
+    order.totalQuantityOfOrder = totalQuantityOfOrder;
+  }
   res.render("client/pages/user/infoUser", {
     pageTitle: "Thông tin tài khoản",
+    orders: orders,
   });
 };
 

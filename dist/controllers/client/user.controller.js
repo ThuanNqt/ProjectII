@@ -19,6 +19,8 @@ const cart_model_1 = __importDefault(require("../../models/cart.model"));
 const forgot_password_model_1 = __importDefault(require("../../models/forgot-password.model"));
 const sendEmail_1 = require("../../helpers/sendEmail");
 const generate_1 = require("../../helpers/generate");
+const order_model_1 = __importDefault(require("../../models/order.model"));
+const product_model_1 = __importDefault(require("../../models/product.model"));
 const register = (req, res) => {
     res.render("client/pages/user/register", {
         pageTitle: "Đăng ký tài khoản",
@@ -102,11 +104,30 @@ const logout = (req, res) => {
     res.redirect("/");
 };
 exports.logout = logout;
-const info = (req, res) => {
+const info = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const cartId = req.cookies.cartId;
+    const orders = yield order_model_1.default.find({
+        cart_id: cartId,
+    });
+    for (const order of orders) {
+        let totalPriceOrder = 0, totalQuantityOfOrder = 0;
+        for (const product of order.products) {
+            product.productInfo = yield product_model_1.default.findOne({
+                _id: product.product_id,
+            });
+            product.newPrice = Math.floor(product.price * (1 - product.discountPercentage / 100));
+            product.totalPriceProduct = product.newPrice * product.quantity;
+            totalPriceOrder += product.totalPriceProduct;
+            totalQuantityOfOrder += product.quantity;
+        }
+        order.totalPriceOrder = totalPriceOrder;
+        order.totalQuantityOfOrder = totalQuantityOfOrder;
+    }
     res.render("client/pages/user/infoUser", {
         pageTitle: "Thông tin tài khoản",
+        orders: orders,
     });
-};
+});
 exports.info = info;
 const forgotPassword = (req, res) => {
     res.render("client/pages/user/forgotPassword", {

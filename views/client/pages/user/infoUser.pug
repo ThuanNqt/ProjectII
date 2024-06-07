@@ -2,20 +2,80 @@ extends ../../layouts/default.pug
 include ../../mixins/box-head.pug
 
 block main
-  .container.my-3
+  .container.my-5
     .row
       .col-12
         +box-head("Thông tin tài khoản")
-    if(user.fullName)
-      h4(class="mb-4 mt-4") User: #{user.fullName}
+    .card
+      .card-body
+        if(user.fullName)
+          h4(class="mb-4 mt-4 text-info") Họ và tên: #{user.fullName}
 
-    if(user.email)
-      div(class="mb-4") Email: <b>#{user.email}</b>
+        if(user.email)
+          div(class="mb-4") Email: <b>#{user.email}</b>
 
-    if(user.status)
-      div(class="mb-4")
-        span Trạng thái:
-        if(user.status === "active")
-          span(class="badge badge-success ml-2") Hoạt động
+        if(user.phone)
+          div(class="mb-4") Số điện thoại: <b>#{user.phone}</b>
+
+        if(user.address)
+          div(class="mb-4") Địa chỉ: <b>#{user.address}</b>
+
+        if(user.status)
+          div(class="mb-4")
+            span Trạng thái:
+            if(user.status === "active")
+              span(class="badge badge-success ml-2") Hoạt động
+            else
+              span(class="badge badge-danger ml-2") Dừng hoạt động
+
+    .card.my-5
+      .card-header Đơn hàng đã đặt
+      .card-body
+        if(orders)
+          table(class="table table-bordered text-center")
+            thead
+              tr
+                th STT
+                th Thông tin sản phẩm
+                th Tổng số lượng
+                th Tổng tiền
+                th Thông tin người nhận
+                th Hình thức thanh toán
+                th Thanh toán
+                th
+            tbody
+              each order, index in orders
+                tr
+                  td.align-middle #{index + 1}
+                  td.align-middle
+                    table
+                      thead
+                        tr
+                          th Tên sản phẩm
+                          th Số lượng
+                          th Thành tiền
+                      tbody
+                        each product, idxProduct in order.products
+                          tr
+                            td #{product.productInfo.title}
+                            td #{product.quantity}
+                            td #{formatMoney(product.totalPriceProduct)}
+
+                  td.align-middle #{order.totalQuantityOfOrder}
+                  td.align-middle.text-success.font-weight-bold #{formatMoney(order.totalPriceOrder)}
+                  td.align-middle
+                    h6.text-info #{order.userInfo.fullName}
+                    p SDT: #{order.userInfo.phone}
+                    p Địa chỉ: #{order.userInfo.address}
+                  td.align-middle #{order.paymentType}
+                  td.align-middle
+                    if(order.payment)
+                      p.text-success Đã thanh toán
+                    else
+                      p.text-danger Chưa thanh toán
+                  td.align-middle
+                    button(
+                      class="btn btn-warning"
+                    ) Đánh giá
         else
-          span(class="badge badge-danger ml-2") Dừng hoạt động
+          p Bạn chưa có đơn hàng nào
