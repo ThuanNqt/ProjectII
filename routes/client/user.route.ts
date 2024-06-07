@@ -33,4 +33,13 @@ router.post(
   controller.resetPasswordPost
 );
 
+// Edit info
+router.get("/editInfo", requireAuth, controller.editInfo);
+router.patch(
+  "/editInfo",
+  requireAuth,
+  validate.registerPost,
+  controller.editInfoPatch
+);
+
 export const userRoutes: Router = router;

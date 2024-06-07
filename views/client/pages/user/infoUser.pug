@@ -1,7 +1,10 @@
 extends ../../layouts/default.pug
 include ../../mixins/box-head.pug
+include ../../mixins/alert.pug
 
 block main
+  +alert-success(2000)
+  +alert-error(2000)
   .container.my-5
     .row
       .col-12
@@ -27,6 +30,10 @@ block main
               span(class="badge badge-success ml-2") Hoạt động
             else
               span(class="badge badge-danger ml-2") Dừng hoạt động
+        a(
+          href=`/user/editInfo`
+          class="btn btn-warning btn -sm ml-1"
+          ) Chỉnh sửa
 
     .card.my-5
       .card-header Đơn hàng đã đặt

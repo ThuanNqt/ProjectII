@@ -315,3 +315,54 @@ export const resetPasswordPost = async (req: Request, res: Response) => {
     res.redirect("back");
   }
 };
+
+// [GET] /user/editInfo
+export const editInfo = async (req: Request, res: Response) => {
+  const user = await User.findOne({ tokenUser: req.cookies.tokenUser });
+  res.render("client/pages/user/editInfo", {
+    pageTitle: "Chỉnh sửa thông tin",
+    user: user,
+  });
+};
+
+// [PATCH] /user/editInfo
+export const editInfoPatch = async (req: Request, res: Response) => {
+  try {
+    console.log(req.body);
+    const existEmail = await User.findOne({
+      email: req.body.email,
+      deleted: false,
+      tokenUser: { $ne: req.cookies.tokenUser }, // Không kiểm tra email của chính record đang sửa
+    });
+    const phoneExist = await User.findOne({
+      phone: req.body.phone,
+      deleted: false,
+      tokenUser: { $ne: req.cookies.tokenUser }, // Không kiểm tra email của chính record đang sửa
+    });
+    if (existEmail) {
+      req.flash("error", `${req.body.email} đã tồn tại!`);
+      res.redirect("back");
+      return;
+    }
+
+    if (phoneExist) {
+      req.flash("error", `${req.body.phone} đã tồn tại!`);
+      res.redirect("back");
+      return;
+    }
+
+    await User.updateOne(
+      {
+        tokenUser: req.cookies.tokenUser,
+      },
+      req.body
+    );
+
+    req.flash("success", "Cập nhật thông tin thành công");
+    res.redirect("/user/info");
+  } catch (error) {
+    console.log(error);
+    req.flash("error", "Cập nhật thông tin thất bại");
+    res.redirect("back");
+  }
+};

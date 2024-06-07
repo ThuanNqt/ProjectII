@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.resetPasswordPost = exports.resetPassword = exports.otpPasswordPost = exports.otpPassword = exports.forgotPasswordPost = exports.forgotPassword = exports.info = exports.logout = exports.loginPost = exports.login = exports.registerPost = exports.register = void 0;
+exports.editInfoPatch = exports.editInfo = exports.resetPasswordPost = exports.resetPassword = exports.otpPasswordPost = exports.otpPassword = exports.forgotPasswordPost = exports.forgotPassword = exports.info = exports.logout = exports.loginPost = exports.login = exports.registerPost = exports.register = void 0;
 const user_model_1 = __importDefault(require("../../models/user.model"));
 const md5_1 = __importDefault(require("md5"));
 const cart_model_1 = __importDefault(require("../../models/cart.model"));
@@ -231,3 +231,47 @@ const resetPasswordPost = (req, res) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.resetPasswordPost = resetPasswordPost;
+const editInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_model_1.default.findOne({ tokenUser: req.cookies.tokenUser });
+    res.render("client/pages/user/editInfo", {
+        pageTitle: "Chỉnh sửa thông tin",
+        user: user,
+    });
+});
+exports.editInfo = editInfo;
+const editInfoPatch = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log(req.body);
+        const existEmail = yield user_model_1.default.findOne({
+            email: req.body.email,
+            deleted: false,
+            tokenUser: { $ne: req.cookies.tokenUser },
+        });
+        const phoneExist = yield user_model_1.default.findOne({
+            phone: req.body.phone,
+            deleted: false,
+            tokenUser: { $ne: req.cookies.tokenUser },
+        });
+        if (existEmail) {
+            req.flash("error", `${req.body.email} đã tồn tại!`);
+            res.redirect("back");
+            return;
+        }
+        if (phoneExist) {
+            req.flash("error", `${req.body.phone} đã tồn tại!`);
+            res.redirect("back");
+            return;
+        }
+        yield user_model_1.default.updateOne({
+            tokenUser: req.cookies.tokenUser,
+        }, req.body);
+        req.flash("success", "Cập nhật thông tin thành công");
+        res.redirect("/user/info");
+    }
+    catch (error) {
+        console.log(error);
+        req.flash("error", "Cập nhật thông tin thất bại");
+        res.redirect("back");
+    }
+});
+exports.editInfoPatch = editInfoPatch;
