@@ -8,6 +8,7 @@ import { sendMail } from "../../helpers/sendEmail";
 import { generateRandomNumber } from "../../helpers/generate";
 import Order from "../../models/order.model";
 import Product from "../../models/product.model";
+import OrderRating from "../../models/order-rating.model";
 
 interface IForgotPassword {
   email: string;
@@ -68,6 +69,16 @@ interface IOrder {
   totalPriceOrder?: number;
   paymentType?: string;
   payment?: boolean;
+}
+
+interface IOrderRating {
+  user_id: string;
+  order_id: string;
+  products: {
+    product_id: string;
+    rating: number;
+    comment: string;
+  };
 }
 
 //[GET] /user/register
@@ -328,7 +339,6 @@ export const editInfo = async (req: Request, res: Response) => {
 // [PATCH] /user/editInfo
 export const editInfoPatch = async (req: Request, res: Response) => {
   try {
-    console.log(req.body);
     const existEmail = await User.findOne({
       email: req.body.email,
       deleted: false,
@@ -363,6 +373,69 @@ export const editInfoPatch = async (req: Request, res: Response) => {
   } catch (error) {
     console.log(error);
     req.flash("error", "Cập nhật thông tin thất bại");
+    res.redirect("back");
+  }
+};
+
+// [GET] /user/order-rating/:order_id
+export const orderRating = async (req: Request, res: Response) => {
+  const user = await User.findOne({ tokenUser: req.cookies.tokenUser });
+  const order: IOrder = await Order.findOne({
+    _id: req.params.order_id,
+  });
+
+  if (order) {
+    for (const product of order.products) {
+      product.productInfo = await Product.findOne({
+        _id: product.product_id,
+      });
+      product.newPrice = Math.floor(
+        product.price * (1 - product.discountPercentage / 100)
+      );
+      product.totalPriceProduct = product.newPrice * product.quantity;
+    }
+  }
+
+  res.render("client/pages/user/orderRating", {
+    pageTitle: "Đánh giá đơn hàng",
+    user: user,
+    order: order,
+  });
+};
+
+// [POST] /user/order-rating
+export const orderRatingPost = async (req: Request, res: Response) => {
+  try {
+    const user = await User.findOne({ tokenUser: req.cookies.tokenUser });
+
+    // Kiểm tra sản phẩm này trong đơn hàng đã được đánh giá chưa, mỗi sản phẩm chỉ được đánh giá một lần
+    const existingRating = await OrderRating.findOne({
+      user_id: user.id,
+      order_id: req.body.order_id,
+      "products.product_id": req.body.product_id,
+    });
+
+    if (existingRating) {
+      req.flash("error", "Sản phẩm này đã được đánh giá");
+      res.redirect("back");
+      return;
+    }
+
+    const orderRating = new OrderRating({
+      user_id: user._id,
+      order_id: req.body.order_id,
+      products: {
+        product_id: req.body.product_id,
+        rating: req.body.rating,
+        comment: req.body.comment,
+      },
+    });
+    await orderRating.save();
+
+    req.flash("success", "Đánh giá thành công");
+    res.redirect("back");
+  } catch (error) {
+    req.flash("error", "Đánh giá thất bại");
     res.redirect("back");
   }
 };

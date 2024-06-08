@@ -81,8 +81,10 @@ block main
                     else
                       p.text-danger Chưa thanh toán
                   td.align-middle
-                    button(
-                      class="btn btn-warning"
-                    ) Đánh giá
+                    if(order.payment)
+                      a(
+                        href=`/user/order-rating/${order.id}`
+                        class="btn btn-warning btn -sm ml-1"
+                        ) Đánh giá
         else
           p Bạn chưa có đơn hàng nào

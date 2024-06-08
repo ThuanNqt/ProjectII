@@ -42,4 +42,8 @@ router.patch(
   controller.editInfoPatch
 );
 
+// Rating order
+router.get("/order-rating/:order_id", requireAuth, controller.orderRating);
+router.post("/order-rating", requireAuth, controller.orderRatingPost);
+
 export const userRoutes: Router = router;

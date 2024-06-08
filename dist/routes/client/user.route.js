@@ -43,4 +43,6 @@ router.get("/password/reset", controller.resetPassword);
 router.post("/password/reset", validate.resetPasswordPost, controller.resetPasswordPost);
 router.get("/editInfo", auth_middleware_1.requireAuth, controller.editInfo);
 router.patch("/editInfo", auth_middleware_1.requireAuth, validate.registerPost, controller.editInfoPatch);
+router.get("/order-rating/:order_id", auth_middleware_1.requireAuth, controller.orderRating);
+router.post("/order-rating", auth_middleware_1.requireAuth, controller.orderRatingPost);
 exports.userRoutes = router;

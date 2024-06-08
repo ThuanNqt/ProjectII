@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.editInfoPatch = exports.editInfo = exports.resetPasswordPost = exports.resetPassword = exports.otpPasswordPost = exports.otpPassword = exports.forgotPasswordPost = exports.forgotPassword = exports.info = exports.logout = exports.loginPost = exports.login = exports.registerPost = exports.register = void 0;
+exports.orderRatingPost = exports.orderRating = exports.editInfoPatch = exports.editInfo = exports.resetPasswordPost = exports.resetPassword = exports.otpPasswordPost = exports.otpPassword = exports.forgotPasswordPost = exports.forgotPassword = exports.info = exports.logout = exports.loginPost = exports.login = exports.registerPost = exports.register = void 0;
 const user_model_1 = __importDefault(require("../../models/user.model"));
 const md5_1 = __importDefault(require("md5"));
 const cart_model_1 = __importDefault(require("../../models/cart.model"));
@@ -21,6 +21,7 @@ const sendEmail_1 = require("../../helpers/sendEmail");
 const generate_1 = require("../../helpers/generate");
 const order_model_1 = __importDefault(require("../../models/order.model"));
 const product_model_1 = __importDefault(require("../../models/product.model"));
+const order_rating_model_1 = __importDefault(require("../../models/order-rating.model"));
 const register = (req, res) => {
     res.render("client/pages/user/register", {
         pageTitle: "Đăng ký tài khoản",
@@ -241,7 +242,6 @@ const editInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.editInfo = editInfo;
 const editInfoPatch = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log(req.body);
         const existEmail = yield user_model_1.default.findOne({
             email: req.body.email,
             deleted: false,
@@ -275,3 +275,56 @@ const editInfoPatch = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.editInfoPatch = editInfoPatch;
+const orderRating = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_model_1.default.findOne({ tokenUser: req.cookies.tokenUser });
+    const order = yield order_model_1.default.findOne({
+        _id: req.params.order_id,
+    });
+    if (order) {
+        for (const product of order.products) {
+            product.productInfo = yield product_model_1.default.findOne({
+                _id: product.product_id,
+            });
+            product.newPrice = Math.floor(product.price * (1 - product.discountPercentage / 100));
+            product.totalPriceProduct = product.newPrice * product.quantity;
+        }
+    }
+    res.render("client/pages/user/orderRating", {
+        pageTitle: "Đánh giá đơn hàng",
+        user: user,
+        order: order,
+    });
+});
+exports.orderRating = orderRating;
+const orderRatingPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = yield user_model_1.default.findOne({ tokenUser: req.cookies.tokenUser });
+        const existingRating = yield order_rating_model_1.default.findOne({
+            user_id: user.id,
+            order_id: req.body.order_id,
+            "products.product_id": req.body.product_id,
+        });
+        if (existingRating) {
+            req.flash("error", "Sản phẩm này đã được đánh giá");
+            res.redirect("back");
+            return;
+        }
+        const orderRating = new order_rating_model_1.default({
+            user_id: user._id,
+            order_id: req.body.order_id,
+            products: {
+                product_id: req.body.product_id,
+                rating: req.body.rating,
+                comment: req.body.comment,
+            },
+        });
+        yield orderRating.save();
+        req.flash("success", "Đánh giá thành công");
+        res.redirect("back");
+    }
+    catch (error) {
+        req.flash("error", "Đánh giá thất bại");
+        res.redirect("back");
+    }
+});
+exports.orderRatingPost = orderRatingPost;

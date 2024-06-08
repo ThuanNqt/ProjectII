@@ -1,0 +1,82 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+include ../../mixins/alert.pug
+
+block main
+  +alert-success(2000)
+  +alert-error(2000)
+  .container.my-5
+    .row
+      .col-12
+        +box-head("Đánh giá đơn hàng")
+
+    if(order)
+      .row
+        .col-12
+          h4(class="mb-2") Thông tin cá nhân
+          table(class="table table-bordered")
+            tbody
+              tr
+                td Họ tên
+                td
+                  b #{user.fullName}
+              tr
+                td Số điện thoại
+                td
+                  b #{user.phone}
+              tr
+                td Địa chỉ
+                td
+                  b #{user.address}
+      .row
+        .col-12
+          h4(class="mb-2") Thông tin đơn hàng
+          table(class="table table-bordered text-center")
+            thead
+              tr.align-middle
+                th STT
+                th Ảnh
+                th Tên sản phẩm
+                th Đơn giá
+                th Số lượng
+                th Thành tiền
+                th
+            tbody
+              if(order.products.length > 0)
+                each item, index in order.products
+                  tr
+                    td.align-middle #{index + 1}
+                    td.align-middle
+                      img(src=item.productInfo.thumbnail, alt=item.productInfo.title  width="80px")
+                    td.align-middle #{item.productInfo.title}
+                    td.align-middle #{formatMoney(item.newPrice)}
+                    td.align-middle #{item.quantity}
+                    td.align-middle #{formatMoney(item.totalPriceProduct)}
+                    td.align-middle
+                      button.btn.btn-warning(data-toggle='modal', data-target=`#rateProductModal-${index}`) Đánh giá
+                      // Modal đánh giá sản phẩm
+                      .modal(tabindex='-1', role='dialog', id=`rateProductModal-${index}`)
+                        .modal-dialog(role='document')
+                          .modal-content
+                            .modal-header
+                              h5.modal-title Đánh giá #{item.productInfo.title}
+                              button.close(data-dismiss='modal', aria-label='Close')
+                                span(aria-hidden='true') &times;
+                            .modal-body
+                              form(action='/user/order-rating', method='POST')
+                                input(type='hidden', name='product_id', value=item.productInfo._id)
+                                input(type='hidden', name='order_id', value=order._id)
+                                .form-group
+                                  label Điểm đánh giá
+                                  select.form-control(name='rating')
+                                    option(value='1') 1
+                                    option(value='2') 2
+                                    option(value='3') 3
+                                    option(value='4') 4
+                                    option(value='5') 5
+                                .form-group
+                                  label Nhận xét
+                                  textarea.form-control(name='comment', rows='3')
+                                button.btn.btn-success.btn-block(type='submit') Gửi đánh giá
+
+

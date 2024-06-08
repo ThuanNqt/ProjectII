@@ -11,8 +11,7 @@ const cartSchema = new mongoose_1.default.Schema({
             product_id: String,
             quantity: Number,
         },
-        { timestamps: true },
     ],
-});
+}, { timestamps: true });
 const Cart = mongoose_1.default.model("Cart", cartSchema, "carts");
 exports.default = Cart;
