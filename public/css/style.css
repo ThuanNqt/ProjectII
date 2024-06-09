@@ -524,11 +524,15 @@ header {
 }
 
 .product-detail .inner-price-old {
-  color: red;
+  color: rgb(97, 47, 47);
   font-weight: 600;
-  font-size: 24px;
+  font-size: 20px;
   margin-bottom: 10px;
   text-decoration: line-through;
+}
+
+.product-detail .rating-product-star {
+  margin-bottom: 10px;
 }
 
 .product-detail .inner-percent {
@@ -677,3 +681,115 @@ button[range-price]:hover {
   background-color: #45a049;
 }
 /* End range price*/
+
+/* Product similar*/
+.similar-product {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 20px;
+  border: 1px solid #f0f0f0;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 10px;
+}
+
+.similar-product:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.similar-product-img img {
+  width: 100px;
+  height: auto;
+  display: block;
+}
+
+.similar-product-content {
+  padding: 10px 15px;
+  background: #fff;
+}
+
+.similar-product-content a.similar-product-title {
+  display: block;
+  color: #333;
+  text-decoration: none;
+  margin: 10px 0;
+  font-weight: 600;
+  font-size: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.similar-product-content a.similar-product-title:hover {
+  color: #0056b3;
+}
+
+.similar-product-priceNew {
+  color: #e55353;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.similar-product-rating {
+  color: #ffc107;
+  font-weight: 500;
+}
+/* End Product similar*/
+
+/* Rating star*/
+.filled {
+  color: #ffc107; /* Màu vàng cho sao đầy */
+}
+
+.empty {
+  color: #e4e5e9; /* Màu xám cho sao rỗng */
+}
+
+.fa-star,
+.fa-star-half-alt {
+  margin-right: 4px;
+}
+/* End Rating star*/
+
+/* Comment of user */
+.comment-users {
+  margin: auto;
+}
+
+.comment-user {
+  background-color: #f9f9f9;
+  border: 1px solid #e1e1e1;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.comment-user-name {
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.comment-user-name-current {
+  font-weight: bold;
+  color: rgb(192, 78, 97);
+  margin-bottom: 5px;
+}
+
+.comment-user-rating {
+  font-size: 0.875rem; /* Chỉnh kích thước phù hợp */
+  color: #ffc107; /* Màu cho sao */
+}
+
+.comment-user-comment {
+  font-size: 0.875rem;
+  color: #666;
+  line-height: 1.4;
+  margin-top: 10px;
+}
+/* End comment of user */

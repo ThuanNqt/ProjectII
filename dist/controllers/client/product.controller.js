@@ -17,6 +17,8 @@ const product_model_1 = __importDefault(require("../../models/product.model"));
 const product_category_model_1 = __importDefault(require("../../models/product-category.model"));
 const product_1 = require("../../helpers/product");
 const product_category_1 = require("../../helpers/product-category");
+const order_rating_model_1 = __importDefault(require("../../models/order-rating.model"));
+const user_model_1 = __importDefault(require("../../models/user.model"));
 const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const find = {
         status: "active",
@@ -76,9 +78,54 @@ const detail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             product.category = category;
         }
         product.newPrice = parseInt(yield (0, product_1.priceNewProduct)(product));
+        if (product) {
+            const productRating = yield order_rating_model_1.default.find({
+                "products.product_id": product._id,
+            });
+            let totalRating = 0;
+            let ratingCount = 0;
+            for (const rating of productRating) {
+                totalRating += rating.products.rating;
+                ratingCount += 1;
+            }
+            const averageRating = ratingCount > 0 ? totalRating / ratingCount : 0;
+            product.averageRating = averageRating;
+        }
+        const productsOfCategory = yield product_model_1.default.find({
+            deleted: false,
+            status: "active",
+            product_category_id: product.product_category_id,
+            slug: { $ne: product.slug },
+        });
+        if (productsOfCategory) {
+            for (const product of productsOfCategory) {
+                product.newPrice = parseInt(yield (0, product_1.priceNewProduct)(product));
+                const productRating = yield order_rating_model_1.default.find({
+                    "products.product_id": product._id,
+                });
+                let totalRating = 0;
+                let ratingCount = 0;
+                for (const rating of productRating) {
+                    totalRating += rating.products.rating;
+                    ratingCount += 1;
+                }
+                const averageRating = ratingCount > 0 ? totalRating / ratingCount : 0;
+                product.averageRating = averageRating;
+            }
+        }
+        const ratingOfUser = yield order_rating_model_1.default.find({
+            "products.product_id": product._id,
+        });
+        if (ratingOfUser) {
+            for (const rating of ratingOfUser) {
+                rating.user = yield user_model_1.default.findOne({ _id: rating.user_id });
+            }
+        }
         res.render(`client/pages/products/detail`, {
             pageTitle: product.title,
             product: product,
+            productsOfCategory: productsOfCategory,
+            ratingOfUser: ratingOfUser.reverse(),
         });
     }
     catch (error) {

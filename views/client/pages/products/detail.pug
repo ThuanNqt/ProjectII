@@ -26,6 +26,18 @@ block main
           if(product.price)
             div(class="inner-price-old") #{formatMoney(product.price)}
 
+          if(product.averageRating)
+            .rating-product-star
+              - var fullStars = Math.floor(product.averageRating)
+              - var halfStar = product.averageRating % 1 !== 0
+              - var emptyStars = 5 - fullStars - (halfStar ? 1 : 0)
+              each unused, i in Array(fullStars)
+                i.fa.fa-star.filled
+              if halfStar
+                i.fa.fa-star-half-alt.filled
+              each unused, i in Array(emptyStars)
+                i.fa.fa-star.empty
+
           if(product.discountPercentage)
             div(class="inner-percent") Giảm tới: <span>#{product.discountPercentage}%</span>
 
@@ -47,12 +59,68 @@ block main
             button(
               type="submit"
               class="btn btn-success btn-block"
-            ) Thêm sản phẩm vào giỏ hàng
+            ) Thêm vào giỏ hàng
 
       hr
       .container.my-5
-        .row.justify-content-center
-          .col-10
+        .row
+          .col-7
             +box-head("Mô tả sản phẩm")
             .inner-desc !{product.description}
+          .col-5
+            if(productsOfCategory.length > 0)
+              +box-head("Các sản phẩm tương tự")
+              each item, index in productsOfCategory
+                  .similar-product
+                    .similar-product-img
+                      img(src=item.thumbnail, alt=item.title)
+                    .similar-product-content
+                        a(href=`/products/detail/${item.slug}` class=".similar-product-title")  #{item.title}
+                        .similar-product-priceNew #{formatMoney(item.newPrice)}
+                        //- .similar-product-rating #{item.averageRating}
+                        .similar-product-rating
+                          - var fullStars = Math.floor(item.averageRating)
+                          - var halfStar = item.averageRating % 1 !== 0
+                          - var emptyStars = 5 - fullStars - (halfStar ? 1 : 0)
+                          each unused, i in Array(fullStars)
+                            i.fa.fa-star.filled
+                          if halfStar
+                            i.fa.fa-star-half-alt.filled
+                          each unused, i in Array(emptyStars)
+                            i.fa.fa-star.empty
+      .container.my-5
+        .row
+          .col-12
+            +box-head("Đánh giá từ khách hàng")
+            .comment-users
+              each item, index in ratingOfUser
+                if(item.user_id === user._id.toString())
+                  .comment-user
+                    .comment-user-name-current #{item.user.fullName}
+                    .comment-user-rating
+                      - var fullStars = Math.floor(item.products.rating)
+                      - var halfStar = item.products.rating % 1 !== 0
+                      - var emptyStars = 5 - fullStars - (halfStar ? 1 : 0)
+                      each unused, i in Array(fullStars)
+                        i.fa.fa-star.filled
+                      if halfStar
+                        i.fa.fa-star-half-alt.filled
+                      each unused, i in Array(emptyStars)
+                        i.fa.fa-star.empty
+                    .comment-user-comment #{item.products.comment}
+                else
+                  .comment-user
+                    .comment-user-name #{item.user.fullName}
+                    .comment-user-rating
+                      - var fullStars = Math.floor(item.products.rating)
+                      - var halfStar = item.products.rating % 1 !== 0
+                      - var emptyStars = 5 - fullStars - (halfStar ? 1 : 0)
+                      each unused, i in Array(fullStars)
+                        i.fa.fa-star.filled
+                      if halfStar
+                        i.fa.fa-star-half-alt.filled
+                      each unused, i in Array(emptyStars)
+                        i.fa.fa-star.empty
+                    .comment-user-comment #{item.products.comment}
+
   script(src="/js/products.js")
