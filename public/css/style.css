@@ -500,85 +500,91 @@ header {
 /*End sub-menu*/
 
 /* product-detail */
+.product-detail {
+  /* Nếu bạn cần một số style chung cho .product-detail, bạn có thể thêm ở đây */
+}
+
 .product-detail .inner-thumb {
   overflow: hidden;
+  border-radius: 8px; /* Thêm border-radius cho ảnh */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Thêm box-shadow nhẹ để nổi bật ảnh */
+  margin-bottom: 20px; /* Thêm khoảng cách dưới ảnh */
 }
 
 .product-detail .inner-thumb img {
   width: 100%;
   aspect-ratio: 4/3;
   transition: transform 0.3s ease-in-out;
+  border-radius: 8px; /* Đồng bộ với .inner-thumb */
 }
 
 .product-detail .inner-thumb:hover img {
-  transform: scale(1.1);
+  transform: scale(1.05); /* Giảm bớt mức độ phóng to để tránh rối mắt */
   cursor: pointer;
 }
 
 .product-detail .inner-title {
-  font-size: 30px;
-  margin-bottom: 15px;
+  font-size: 24px; /* Giảm kích cỡ font để phù hợp hơn với layout */
+  font-weight: 700; /* Tăng độ đậm để nổi bật tiêu đề */
+  margin-bottom: 20px;
+  color: #333; /* Màu đậm để dễ đọc */
 }
 
 .product-detail .inner-category {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  font-size: 16px; /* Điều chỉnh font-size cho phù hợp */
+  color: #555; /* Màu nhẹ hơn */
 }
 
 .product-detail .inner-price-new {
-  color: green;
-  font-weight: 700;
-  font-size: 25px;
-  margin-bottom: 10px;
+  color: #4caf50; /* Màu xanh lá nhẹ nhàng hơn */
+  font-size: 22px;
+  margin-bottom: 15px;
 }
 
 .product-detail .inner-price-old {
-  color: rgb(97, 47, 47);
-  font-weight: 600;
-  font-size: 20px;
-  margin-bottom: 10px;
-  text-decoration: line-through;
+  color: #999; /* Màu xám nhẹ hơn để không lấn át giá mới */
+  font-size: 18px;
+  margin-bottom: 15px;
 }
 
 .product-detail .rating-product-star {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  /* Bạn có thể thêm các style cho rating ở đây */
 }
 
 .product-detail .inner-percent {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .product-detail .inner-percent span {
-  color: #aa4747;
-  font-weight: 700;
-  display: inline-block;
-  margin-left: 5px;
-  border-radius: 8px;
+  color: #d23; /* Màu đỏ sậm hơn để nổi bật */
 }
 
 .product-detail .inner-stock span {
-  color: #419c33;
-  font-weight: 700;
-  display: inline-block;
-  margin-left: 5px;
-  border-radius: 8px;
-  margin-bottom: 10px;
+  color: #4caf50; /* Màu xanh lá để chỉ thông tin còn hàng */
+  margin-bottom: 15px;
 }
 
 .inner-desc h3 {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 10px;
+  font-size: 20px; /* Tăng kích cỡ font cho tiêu đề phụ */
+  font-weight: 700; /* Tăng độ đậm */
+  margin-bottom: 15px;
+  color: #333; /* Đồng bộ màu với tiêu đề chính */
 }
 
 .inner-desc p {
-  margin-bottom: 10px;
-  font-size: 15px;
+  margin-bottom: 15px; /* Tăng khoảng cách giữa các đoạn văn */
+  font-size: 14px; /* Điều chỉnh kích cỡ font cho đoạn văn */
+  line-height: 1.6; /* Tăng độ cao của dòng để tăng khả năng đọc */
+  color: #555; /* Màu chữ nhẹ nhàng */
 }
 
 .inner-desc img {
   width: 100%;
   height: auto;
-  margin-bottom: 10px;
+  margin-bottom: 20px; /* Tăng khoảng cách dưới ảnh */
+  border-radius: 8px; /* Thêm border-radius cho ảnh */
 }
 /* end product-detail */
 
