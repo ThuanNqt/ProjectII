@@ -381,15 +381,21 @@ header {
 
 /*product-item*/
 .product-item {
-  border: 1px solid #ddd;
+  border: 1px solid #eaeaea; /* Màu viền nhẹ nhàng */
   border-radius: 8px;
   overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Thêm bóng đổ nhẹ */
+  transition: box-shadow 0.3s ease-in-out; /* Thêm hiệu ứng cho bóng đổ */
+}
+
+.product-item:hover {
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* Tăng bóng đổ khi hover */
 }
 
 .product-item .inner-image {
   width: 100%;
   aspect-ratio: 4/3;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #eaeaea; /* Đồng nhất màu viền */
   position: relative;
 }
 
@@ -401,53 +407,55 @@ header {
 }
 
 .product-item .inner-image:hover img {
-  transform: scale(1.1);
+  transform: scale(1.05); /* Giảm scaling xuống để kém gián đoạn */
   cursor: pointer;
 }
 
 .product-item .inner-featured {
   position: absolute;
-  top: 0;
-  right: 0;
-  background: green;
+  top: 10px; /* Thêm khoảng cách từ viền trên */
+  right: 10px; /* Thêm khoảng cách từ viền phải */
+  background: #4caf50; /* Màu xanh lá nhạt */
   color: white;
-  padding: 3px 6px;
+  padding: 5px 8px; /* Tăng kích thước padding */
   font-weight: 600;
-  font-size: 14px;
+  font-size: 0.875rem; /* Điều chỉnh kích thước font */
   border-radius: 8px;
-  animation: colorChangeFeatured 2s linear infinite;
 }
 
 .product-item .inner-content {
-  padding: 15px;
+  padding: 20px; /* Tăng padding cho nội dung */
 }
 
 .product-item .inner-content .inner-title {
-  font-size: 18px;
+  font-size: 1rem; /* Điều chỉnh kích thước font */
   font-weight: 600;
+  color: #333; /* Màu chữ đậm hơn */
+  margin-bottom: 10px; /* Thêm khoảng cách dưới tiêu đề */
 }
 
 .product-item .inner-content .inner-price-new {
-  font-size: 18px;
+  font-size: 1.125rem; /* Điều chỉnh kích thước font */
   font-weight: 700;
-  color: green;
+  color: #4caf50; /* Đồng bộ màu xanh như featured */
+  margin-bottom: 5px; /* Thêm khoảng cách dưới giá mới */
 }
 
 .product-item .inner-content .inner-price-old {
-  font-size: 18px;
+  font-size: 0.875rem; /* Nhỏ hơn để giảm sự chú ý */
   font-weight: 600;
-  color: red;
+  color: #999; /* Màu nhẹ hơn */
   text-decoration: line-through;
 }
 
 .product-item .inner-content .inner-discount {
-  font-size: 14px;
+  font-size: 0.75rem; /* Nhỏ hơn để không lấn át thông tin khác */
   font-weight: 600;
   color: white;
-  background: rgb(210, 83, 83);
-  display: inline-block;
-  padding: 3px 10px;
+  background: #d23; /* Màu đỏ sậm hơn */
+  padding: 2px 8px; /* Điều chỉnh padding */
   border-radius: 8px;
+  margin-top: 10px; /* Thêm khoảng cách trên */
 }
 
 /* sub-menu */
