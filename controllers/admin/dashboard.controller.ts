@@ -117,8 +117,6 @@ export const dashboard = async (req: Request, res: Response) => {
     product.title = productInfo.title;
   }
 
-  console.log(statistic.order.bestSellingProduct);
-
   res.render("admin/pages/dashboard/index", {
     pageTitle: "Trang tổng quan",
     statistic: statistic,

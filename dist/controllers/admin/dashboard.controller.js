@@ -112,7 +112,6 @@ const dashboard = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const productInfo = yield product_model_1.default.findOne({ _id: product._id });
         product.title = productInfo.title;
     }
-    console.log(statistic.order.bestSellingProduct);
     res.render("admin/pages/dashboard/index", {
         pageTitle: "Trang tổng quan",
         statistic: statistic,
