@@ -130,3 +130,163 @@ if (sort) {
   }
 }
 // End sort
+
+// Chart
+const ChartTotal = document.getElementById("ChartTotal");
+const statistic = JSON.parse(ChartTotal.dataset.statistic);
+
+new Chart(ChartTotal, {
+  type: "bar",
+  data: {
+    labels: [
+      "Danh mục",
+      "Sản phẩm",
+      "Số quyền",
+      "Tài khoản Admin",
+      "Tài khoản Client",
+      "Số đơn hàng",
+    ],
+    datasets: [
+      {
+        label: "Số lượng",
+        data: [
+          statistic.categoryProduct.total,
+          statistic.product.total,
+          statistic.role.total,
+          statistic.account.total,
+          statistic.user.total,
+          statistic.order.total,
+        ],
+        backgroundColor: [
+          "rgba(255, 99, 132, 0.2)",
+          "rgba(255, 159, 64, 0.2)",
+          "rgba(255, 205, 86, 0.2)",
+          "rgba(75, 192, 192, 0.2)",
+          "rgba(54, 162, 235, 0.2)",
+          "rgba(153, 102, 255, 0.2)",
+        ],
+        borderColor: [
+          "rgb(255, 99, 132)",
+          "rgb(255, 159, 64)",
+          "rgb(255, 205, 86)",
+          "rgb(75, 192, 192)",
+          "rgb(54, 162, 235)",
+          "rgb(153, 102, 255)",
+        ],
+        borderWidth: 1,
+      },
+    ],
+  },
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  },
+});
+
+// char product
+const ChartProduct = document.getElementById("ChartProduct");
+const statisticProduct = JSON.parse(ChartProduct.dataset.statisticProduct);
+
+new Chart(ChartProduct, {
+  type: "pie",
+  data: {
+    labels: ["Hoạt động", "Dừng hoạt động"],
+    datasets: [
+      {
+        label: "Số lượng",
+        data: [statisticProduct.active, statisticProduct.inactive],
+        backgroundColor: ["rgb(60, 179, 113)", "rgb(255, 0, 0)"],
+        hoverOffset: 4,
+      },
+    ],
+  },
+});
+
+// char category
+const ChartCategory = document.getElementById("ChartCategory");
+const statisticCategory = JSON.parse(ChartCategory.dataset.statisticCategory);
+
+new Chart(ChartCategory, {
+  type: "pie",
+  data: {
+    labels: ["Hoạt động", "Dừng hoạt động"],
+    datasets: [
+      {
+        label: "Số lượng",
+        data: [statisticCategory.active, statisticCategory.inactive],
+        backgroundColor: ["rgb(60, 179, 113)", "rgb(255, 0, 0)"],
+        hoverOffset: 4,
+      },
+    ],
+  },
+});
+
+// char category
+const ChartAccount = document.getElementById("ChartAccount");
+const statisticAccount = JSON.parse(ChartAccount.dataset.statisticAccount);
+
+new Chart(ChartAccount, {
+  type: "pie",
+  data: {
+    labels: ["Hoạt động", "Dừng hoạt động"],
+    datasets: [
+      {
+        label: "Số lượng",
+        data: [statisticAccount.active, statisticAccount.inactive],
+        backgroundColor: ["rgb(60, 179, 113)", "rgb(255, 0, 0)"],
+        hoverOffset: 4,
+      },
+    ],
+  },
+});
+
+// char category
+const ChartUser = document.getElementById("ChartUser");
+const statisticUser = JSON.parse(ChartUser.dataset.statisticUser);
+
+new Chart(ChartUser, {
+  type: "pie",
+  data: {
+    labels: ["Hoạt động", "Dừng hoạt động"],
+    datasets: [
+      {
+        label: "Số lượng",
+        data: [statisticUser.active, statisticUser.inactive],
+        backgroundColor: ["rgb(60, 179, 113)", "rgb(255, 0, 0)"],
+        hoverOffset: 4,
+      },
+    ],
+  },
+});
+
+// Chart product best seller
+const ChartProductBestSeller = document.getElementById(
+  "ChartProductBestSeller"
+);
+const statisticProductBestSeller = JSON.parse(
+  ChartProductBestSeller.dataset.statisticProductBestSeller
+);
+
+// Extract titles and counts into separate arrays
+const titles = statisticProductBestSeller.map((product) => product.title);
+const counts = statisticProductBestSeller.map((product) => product.count);
+
+new Chart(ChartProductBestSeller, {
+  type: "line",
+  data: {
+    labels: titles,
+    datasets: [
+      {
+        label: "Số lượng",
+        data: counts,
+        fill: false,
+        borderColor: "rgb(75, 192, 192)",
+        tension: 0.1,
+      },
+    ],
+  },
+});
+// End chart

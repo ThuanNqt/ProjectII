@@ -7,9 +7,13 @@ block main
   +alert-success(2000)
   +box-head("Trang quản trị")
 
-  .row.mt-4
-    .col-12.col-lg-6
-      .card.mb-4
+  .row.my-5
+    .col-7
+      div
+        canvas#ChartTotal(data-statistic=JSON.stringify(statistic))
+        div.text-center Thống kê tổng số lượng
+    .col-5
+      .card
         .card-header Thông tin tài khoản
         .card-body
           if(user.avatar)
@@ -35,18 +39,30 @@ block main
               p.mb-0 Quyền:
               p.mb-0.font-weight-bold #{role.title}
 
-    .col-12.col-lg-6
-      - var cards = []
-      - var card1 = { title: 'Danh mục sản phẩm', content: statistic.categoryProduct }
-      - var card2 = { title: 'Sản phẩm', content: statistic.product }
-      - var card3 = { title: 'Tài khoản Admin', content: statistic.account }
-      - var card4 = { title: 'Tài khoản Client', content: statistic.user }
-      - cards.push(card1, card2, card3, card4)
-      each card, i in cards
-        .card.mb-4
-          .card-header= card.title
-          .card-body
-            each val, key in card.content
-              .d-flex.justify-content-between
-                p.mb-0 #{key.charAt(0).toUpperCase() + key.slice(1)}:
-                p.mb-0.font-weight-bold #{val}
+  hr
+  .row.my-5
+    .col-3
+      div
+        canvas#ChartProduct(data-statistic-product=JSON.stringify(statistic.product))
+        div.text-center Sản phẩm
+    .col-3
+      div
+        canvas#ChartCategory(data-statistic-category=JSON.stringify(statistic.categoryProduct))
+        div.text-center Danh mục
+    .col-3
+      div
+        canvas#ChartAccount(data-statistic-account=JSON.stringify(statistic.account))
+        div.text-center Tài khoản Admin
+    .col-3
+      div
+        canvas#ChartUser(data-statistic-user=JSON.stringify(statistic.user))
+        div.text-center Tài khoản Client
+
+  hr
+  .row.my-5
+    .col-1
+    .col-10
+      div
+        canvas#ChartProductBestSeller(data-statistic-product-best-seller=JSON.stringify(statistic.order.bestSellingProduct))
+        div.text-center Các sản phẩm có số lượng mua nhiều nhất
+    .col-1

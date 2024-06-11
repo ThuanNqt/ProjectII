@@ -17,6 +17,8 @@ const product_category_model_1 = __importDefault(require("../../models/product-c
 const product_model_1 = __importDefault(require("../../models/product.model"));
 const account_model_1 = __importDefault(require("../../models/account.model"));
 const user_model_1 = __importDefault(require("../../models/user.model"));
+const role_model_1 = __importDefault(require("../../models/role.model"));
+const order_model_1 = __importDefault(require("../../models/order.model"));
 const dashboard = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const statistic = {
         categoryProduct: {
@@ -29,6 +31,9 @@ const dashboard = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             active: 0,
             inactive: 0,
         },
+        role: {
+            total: 0,
+        },
         account: {
             total: 0,
             active: 0,
@@ -38,6 +43,10 @@ const dashboard = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             total: 0,
             active: 0,
             inactive: 0,
+        },
+        order: {
+            total: 0,
+            bestSellingProduct: [],
         },
     };
     statistic.categoryProduct.total = yield product_category_model_1.default.countDocuments({
@@ -62,6 +71,9 @@ const dashboard = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         deleted: false,
         status: "inactive",
     });
+    statistic.role.total = yield role_model_1.default.countDocuments({
+        deleted: false,
+    });
     statistic.account.total = yield account_model_1.default.countDocuments({
         deleted: false,
     });
@@ -84,6 +96,23 @@ const dashboard = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         deleted: false,
         status: "inactive",
     });
+    statistic.order.total = yield order_model_1.default.countDocuments();
+    statistic.order.bestSellingProduct = yield order_model_1.default.aggregate([
+        { $unwind: "$products" },
+        {
+            $group: {
+                _id: "$products.product_id",
+                count: { $sum: 1 },
+            },
+        },
+        { $sort: { count: -1 } },
+        { $limit: 5 },
+    ]);
+    for (const product of statistic.order.bestSellingProduct) {
+        const productInfo = yield product_model_1.default.findOne({ _id: product._id });
+        product.title = productInfo.title;
+    }
+    console.log(statistic.order.bestSellingProduct);
     res.render("admin/pages/dashboard/index", {
         pageTitle: "Trang tổng quan",
         statistic: statistic,
