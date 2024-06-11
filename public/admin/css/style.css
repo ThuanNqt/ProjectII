@@ -250,3 +250,29 @@ body {
   margin-bottom: 10px;
 }
 /* end product-detail */
+
+/*box-head*/
+.box-head {
+  padding: 20px;
+  background-color: #f8f9fa; /* Màu nền nhẹ nhàng */
+  border-bottom: 2px solid #dee2e6; /* Viền dưới để phân cách */
+  margin-bottom: 20px; /* Khoảng cách với nội dung bên dưới */
+}
+
+.box-head-center {
+  padding: 20px;
+  background-color: #f8f9fa; /* Màu nền nhẹ nhàng */
+  border-bottom: 2px solid #dee2e6; /* Viền dưới để phân cách */
+  margin-bottom: 20px; /* Khoảng cách với nội dung bên dưới */
+  text-align: center;
+}
+
+.inner-title {
+  margin: 0; /* Loại bỏ margin mặc định */
+  color: #495057; /* Màu sắc cho tiêu đề */
+  font-size: 24px; /* Kích thước font lớn */
+  font-weight: 600; /* Độ đậm của font */
+  text-transform: uppercase; /* Chữ hoa */
+  letter-spacing: 1px; /* Khoảng cách giữa các chữ */
+}
+/*End box-head*/

@@ -94,7 +94,7 @@ block main
             +box-head("Đánh giá từ khách hàng")
             .comment-users
               each item, index in ratingOfUser
-                if(item.user_id === user._id.toString())
+                if(user && item.user_id === user._id.toString())
                   .comment-user
                     .comment-user-name-current #{item.user.fullName}
                     .comment-user-rating

@@ -1,5 +1,6 @@
 extends ../../layouts/auth.pug
 include ../../mixins/alert.pug
+include ../../mixins/box-head.pug
 
 block main
   +alert-success(2000)
@@ -7,8 +8,8 @@ block main
 
   .container.my-5
     .row.justify-content-center
-      .col-6
-        h1(class="text-center") Đăng nhập
+      .col-5
+        +box-head("Đăng nhập trang quản trị")
         form(
           action=`/admin/auth/login`
           method="post"

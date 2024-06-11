@@ -4,13 +4,14 @@ include ../../mixins/pagination.pug
 include ../../mixins/search.pug
 include ../../mixins/table-tree.pug
 include ../../mixins/alert.pug
+include ../../mixins/box-head.pug
 
 block main
   if(role.permissions.includes("products-category_view"))
     +alert-success(2000)
     +alert-error(2000)
 
-    h1 Danh mục sản phẩm
+    +box-head("Danh mục sản phẩm")
     .card.mb-3
       .card-header Bộ lọc và tìm kiếm
       .card-body

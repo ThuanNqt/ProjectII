@@ -2,12 +2,13 @@ extends ../../layouts/default.pug
 include ../../mixins/alert.pug
 include ../../mixins/search.pug
 include ../../mixins/filterStatus.pug
+include ../../mixins/box-head.pug
 
 block main
   if(role.permissions.includes("accounts_view"))
     +alert-error(2000)
     +alert-success(2000)
-    h1(class="mb-4") Danh sách tài khoản
+    +box-head("Danh sách tài khoản")
 
     .card.mb-3
       .card-header Bộ lọc và tìm kiếm
