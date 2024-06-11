@@ -29,6 +29,7 @@ const product_category_route_1 = require("./product-category.route");
 const role_route_1 = require("./role.route");
 const account_route_1 = require("./account.route");
 const auth_route_1 = require("./auth.route");
+const order_route_1 = require("./order.route");
 const authMiddleware = __importStar(require("../../middlewares/admin/auth.middleware"));
 exports.default = (app) => {
     app.use("/admin/dashboard", authMiddleware.requireAuth, dashboard_route_1.dashboardRoutes);
@@ -37,4 +38,5 @@ exports.default = (app) => {
     app.use("/admin/roles", authMiddleware.requireAuth, role_route_1.roleRoutes);
     app.use("/admin/accounts", authMiddleware.requireAuth, account_route_1.accountRoutes);
     app.use("/admin/auth", auth_route_1.authRoutes);
+    app.use("/admin/order", authMiddleware.requireAuth, order_route_1.orderRoutes);
 };

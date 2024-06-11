@@ -81,10 +81,26 @@ block main
                     else
                       p.text-danger Chưa thanh toán
                   td.align-middle
-                    if(order.payment)
-                      a(
-                        href=`/user/order-rating/${order.id}`
-                        class="btn btn-warning btn -sm ml-1"
-                        ) Đánh giá
+                    if(!order.deleted)
+                      if(order.payment)
+                        a(
+                          href=`/user/order-rating/${order.id}`
+                          class="btn btn-warning btn -sm ml-1"
+                          ) Đánh giá
+                      else
+                        button(
+                          btn-cancel-order
+                          data-id=order.id
+                          class="btn btn-danger btn -sm ml-1 mt-2"
+                          ) Hủy đơn
+                    else
+                      h3.text-danger Đã hủy đơn
         else
           p Bạn chưa có đơn hàng nào
+  form(
+    action=""
+    method="POST"
+    id="form-cancel-order"
+    path="/user/order-cancel"
+  )
+  script(src="/js/order.js")

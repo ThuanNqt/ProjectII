@@ -46,4 +46,11 @@ router.patch(
 router.get("/order-rating/:order_id", requireAuth, controller.orderRating);
 router.post("/order-rating", requireAuth, controller.orderRatingPost);
 
+// Cancel order
+router.delete(
+  "/order-cancel/:order_id",
+  requireAuth,
+  controller.orderCancelDelete
+);
+
 export const userRoutes: Router = router;

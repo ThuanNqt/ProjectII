@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.orderRatingPost = exports.orderRating = exports.editInfoPatch = exports.editInfo = exports.resetPasswordPost = exports.resetPassword = exports.otpPasswordPost = exports.otpPassword = exports.forgotPasswordPost = exports.forgotPassword = exports.info = exports.logout = exports.loginPost = exports.login = exports.registerPost = exports.register = void 0;
+exports.orderCancelDelete = exports.orderRatingPost = exports.orderRating = exports.editInfoPatch = exports.editInfo = exports.resetPasswordPost = exports.resetPassword = exports.otpPasswordPost = exports.otpPassword = exports.forgotPasswordPost = exports.forgotPassword = exports.info = exports.logout = exports.loginPost = exports.login = exports.registerPost = exports.register = void 0;
 const user_model_1 = __importDefault(require("../../models/user.model"));
 const md5_1 = __importDefault(require("md5"));
 const cart_model_1 = __importDefault(require("../../models/cart.model"));
@@ -328,3 +328,37 @@ const orderRatingPost = (req, res) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.orderRatingPost = orderRatingPost;
+const orderCancelDelete = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const order = yield order_model_1.default.findOne({ _id: req.params.order_id });
+        if (!order) {
+            req.flash("error", "Đơn hàng không tồn tại");
+            res.redirect("back");
+            return;
+        }
+        if (order.payment) {
+            req.flash("error", "Đơn hàng đã thanh toán không thể hủy đơn");
+            res.redirect("back");
+            return;
+        }
+        yield order_model_1.default.updateOne({ _id: req.params.order_id }, { deleted: true });
+        for (const product of order.products) {
+            const productInfo = yield product_model_1.default.findOne({
+                _id: product.product_id,
+            });
+            const newStock = productInfo.stock + product.quantity;
+            yield product_model_1.default.updateOne({
+                _id: product.product_id,
+            }, {
+                stock: newStock,
+            });
+        }
+        req.flash("success", "Đơn hàng đã bị huỷ");
+        res.redirect("back");
+    }
+    catch (error) {
+        req.flash("error", "Hủy đơn thất bại");
+        res.redirect("back");
+    }
+});
+exports.orderCancelDelete = orderCancelDelete;

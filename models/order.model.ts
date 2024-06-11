@@ -18,6 +18,10 @@ const orderSchema = new mongoose.Schema(
     ],
     paymentType: String,
     payment: Boolean,
+    deleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

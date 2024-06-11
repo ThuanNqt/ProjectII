@@ -5,6 +5,7 @@ import { productCategoryRoutes } from "./product-category.route";
 import { roleRoutes } from "./role.route";
 import { accountRoutes } from "./account.route";
 import { authRoutes } from "./auth.route";
+import { orderRoutes } from "./order.route";
 import * as authMiddleware from "../../middlewares/admin/auth.middleware";
 
 export default (app: Express) => {
@@ -18,4 +19,5 @@ export default (app: Express) => {
   app.use("/admin/roles", authMiddleware.requireAuth, roleRoutes);
   app.use("/admin/accounts", authMiddleware.requireAuth, accountRoutes);
   app.use("/admin/auth", authRoutes);
+  app.use("/admin/order", authMiddleware.requireAuth, orderRoutes);
 };

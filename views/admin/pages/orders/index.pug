@@ -1,0 +1,60 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+include ../../mixins/alert.pug
+include ../../mixins/search.pug
+
+block main
+  +alert-success(2000)
+  +alert-error(2000)
+
+  +box-head("Danh sách đơn hàng")
+
+  table.table.table-sm.text-center.table-bordered
+    thead
+      tr
+        th STT
+        th Thông tin sản phẩm
+        th Tổng số lượng
+        th Tổng tiền
+        th Thông tin người nhận
+        th Hình thức thanh toán
+        th Thanh toán
+        th Trạng thái
+    tbody
+      each order, index in orders
+        tr
+          td.align-middle #{index + 1}
+          td.align-middle
+            table
+              thead
+                tr
+                  th Tên sản phẩm
+                  th Số lượng
+                  th Thành tiền
+              tbody
+                each product, idxProduct in order.products
+                  tr
+                    td #{product.productInfo.title}
+                    td #{product.quantity}
+                    td #{formatMoney(product.totalPriceProduct)}
+
+          td.align-middle #{order.totalQuantityOfOrder}
+          td.align-middle.text-success.font-weight-bold #{formatMoney(order.totalPriceOrder)}
+          td.align-middle
+            h6.text-info #{order.userInfo.fullName}
+            p SDT: #{order.userInfo.phone}
+            p Địa chỉ: #{order.userInfo.address}
+          td.align-middle #{order.paymentType}
+          td.align-middle
+            if(order.payment)
+              p.text-success Đã thanh toán
+            else
+              p.text-danger Chưa thanh toán
+          td.align-middle
+            if(!order.deleted)
+              a(
+                href=`/admin/order/order-shipping/${order.id}`
+                class="btn btn-warning btn -sm ml-1"
+                ) Vận chuyển
+            else
+              h3.text-danger Đã hủy đơn

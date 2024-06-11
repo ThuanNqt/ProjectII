@@ -439,3 +439,45 @@ export const orderRatingPost = async (req: Request, res: Response) => {
     res.redirect("back");
   }
 };
+
+// [DELETE] /user/order-cancel/:order_id
+export const orderCancelDelete = async (req: Request, res: Response) => {
+  try {
+    const order = await Order.findOne({ _id: req.params.order_id });
+    if (!order) {
+      req.flash("error", "Đơn hàng không tồn tại");
+      res.redirect("back");
+      return;
+    }
+
+    if (order.payment) {
+      req.flash("error", "Đơn hàng đã thanh toán không thể hủy đơn");
+      res.redirect("back");
+      return;
+    }
+
+    await Order.updateOne({ _id: req.params.order_id }, { deleted: true });
+
+    // Tăng lại số lượng products đã thay đổi
+    for (const product of order.products) {
+      const productInfo: IProduct = await Product.findOne({
+        _id: product.product_id,
+      });
+      const newStock = productInfo.stock + product.quantity;
+      await Product.updateOne(
+        {
+          _id: product.product_id,
+        },
+        {
+          stock: newStock,
+        }
+      );
+    }
+
+    req.flash("success", "Đơn hàng đã bị huỷ");
+    res.redirect("back");
+  } catch (error) {
+    req.flash("error", "Hủy đơn thất bại");
+    res.redirect("back");
+  }
+};
