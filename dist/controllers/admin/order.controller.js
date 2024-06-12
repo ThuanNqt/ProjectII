@@ -12,9 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.index = void 0;
+exports.orderShipping = exports.index = void 0;
 const order_model_1 = __importDefault(require("../../models/order.model"));
 const product_model_1 = __importDefault(require("../../models/product.model"));
+const order_shipping_model_1 = __importDefault(require("../../models/order-shipping.model"));
 const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const orders = yield order_model_1.default.find();
     for (const order of orders) {
@@ -32,7 +33,27 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         order.totalQuantityOfOrder = totalQuantityOfOrder;
     }
     res.render("admin/pages/orders/index", {
-        orders,
+        orders: orders.reverse(),
     });
 });
 exports.index = index;
+const orderShipping = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const order = yield order_model_1.default.findOne({ _id: req.body.order_id });
+        if (!order) {
+            req.flash("error", "Đơn hàng không tồn tại");
+            res.redirect("back");
+            return;
+        }
+        yield order_model_1.default.updateOne({ _id: req.body.order_id }, { status: "shipping" });
+        const shipperInfo = new order_shipping_model_1.default(req.body);
+        yield shipperInfo.save();
+        req.flash("success", "Đơn hàng đã được gửi");
+        res.redirect("back");
+    }
+    catch (error) {
+        req.flash("error", "Có lỗi xảy ra");
+        res.redirect("back");
+    }
+});
+exports.orderShipping = orderShipping;

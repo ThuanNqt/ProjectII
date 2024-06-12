@@ -20,6 +20,7 @@ block main
           th Hình thức thanh toán
           th Thanh toán
           th Trạng thái
+          th Vận chuyển
       tbody
         each order, index in orders
           tr
@@ -51,14 +52,37 @@ block main
               else
                 p.text-danger Chưa thanh toán
             td.align-middle
+              if(order.status === "prepare")
+                h5.text-primary Chuẩn bị gửi hàng
+              else if(order.status === "shipping")
+                h5.text-info Đã bàn giao cho đơn vị vận chuyển
+              else if(order.status === "success")
+                h5.text-success Người dùng đã nhận hàng
+              else
+                h5.text-danger Đơn hàng đã bị hủy
+            td.align-middle
               if(!order.deleted)
                 if(role.permissions.includes("orders_shipping"))
-                  a(
-                    href=`/admin/order/order-shipping/${order.id}`
-                    class="btn btn-warning btn -sm ml-1"
-                    ) Vận chuyển
-              else
-                h3.text-danger Đã hủy đơn
+                  button.btn.btn-warning.btn-sm.ml-1(data-toggle='modal' data-target=`#shippingModal${order.id}`) Vận chuyển
+                  div(id=`shippingModal${order.id}` class="modal fade" tabindex='-1' role='dialog')
+                    .modal-dialog(role='document')
+                      .modal-content
+                        .modal-header
+                          h5.modal-title Thông tin vận chuyển
+                          button.close(type='button' data-dismiss='modal' aria-label='Close')
+                            span(aria-hidden='true') ×
+                        .modal-body
+                          form(action=`/admin/order/process-shipping` method='POST')
+                            input(type='hidden' name='order_id' value=order.id)
+                            .form-group
+                              label(for='shipName') Tên người ship
+                              input#shipName.form-control(name='shipName' required)
+                            .form-group
+                              label(for='shipPhone') Số điện thoại
+                              input#shipPhone.form-control(name='shipPhone' required)
+                            .form-group
+                              button.btn.btn-primary(type='submit') Gửi thông tin
+
   else
     h1(class="mb-4") Bạn không có quyền truy cập trang này
     p Vui lòng liên hệ với quản trị viên để được hỗ trợ

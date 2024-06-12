@@ -62,6 +62,8 @@ interface IOrder {
   }[];
   paymentType?: string;
   payment?: boolean;
+  status?: string;
+  deleted?: boolean;
 }
 
 interface IUser {
@@ -149,6 +151,7 @@ export const order = async (req: Request, res: Response) => {
     products: products,
     paymentType: "Thanh toán khi nhận hàng",
     payment: false,
+    status: "prepare",
   };
 
   try {
@@ -313,6 +316,7 @@ export const createPaymentUrl = async (req: Request, res: Response) => {
     products: products,
     paymentType: "Thanh toán quan VNPay",
     payment: false,
+    status: "prepare",
   };
 
   let order: IOrder;

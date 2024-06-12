@@ -75,6 +75,7 @@ const order = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         products: products,
         paymentType: "Thanh toán khi nhận hàng",
         payment: false,
+        status: "prepare",
     };
     try {
         const order = new order_model_1.default(objectOrder);
@@ -196,6 +197,7 @@ const createPaymentUrl = (req, res) => __awaiter(void 0, void 0, void 0, functio
         products: products,
         paymentType: "Thanh toán quan VNPay",
         payment: false,
+        status: "prepare",
     };
     let order;
     try {

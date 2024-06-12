@@ -49,6 +49,7 @@ block main
                 th Thông tin người nhận
                 th Hình thức thanh toán
                 th Thanh toán
+                th Trạng thái
                 th
             tbody
               each order, index in orders
@@ -81,7 +82,19 @@ block main
                     else
                       p.text-danger Chưa thanh toán
                   td.align-middle
-                    if(!order.deleted)
+                    if(order.status === "prepare")
+                      h5.text-primary Người gửi đang chuẩn bị hàng
+                    else if(order.status === "shipping")
+                      h5.text-info Đang giao hàng
+                      h6.text-secondary Người giao hàng: #{order.infoShipper.shipName}
+                      h6.text-secondary Số điện thoại: #{order.infoShipper.shipPhone}
+                    else if(order.status === "success")
+                      h5.text-success Đã nhận được hàng
+                    else
+                      h5.text-danger Đơn hàng đã bị hủy
+
+                  td.align-middle
+                    if(!order.deleted && order.status !== "cancel")
                       if(order.payment)
                         a(
                           href=`/user/order-rating/${order.id}`
@@ -93,8 +106,6 @@ block main
                           data-id=order.id
                           class="btn btn-danger btn -sm ml-1 mt-2"
                           ) Hủy đơn
-                    else
-                      h3.text-danger Đã hủy đơn
         else
           p Bạn chưa có đơn hàng nào
   form(

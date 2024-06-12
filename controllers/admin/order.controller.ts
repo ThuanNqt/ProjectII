@@ -2,6 +2,7 @@ import { priceNewProduct } from "../../helpers/product";
 import { Request, Response } from "express";
 import Order from "../../models/order.model";
 import Product from "../../models/product.model";
+import OrderShipping from "../../models/order-shipping.model";
 
 interface IOrder {
   totalPriceCart?: number;
@@ -26,6 +27,8 @@ interface IOrder {
   totalPriceOrder?: number;
   paymentType?: string;
   payment?: boolean;
+  status?: string;
+  deleted?: boolean;
 }
 
 interface IProduct {
@@ -43,6 +46,13 @@ interface IProduct {
   deleted: boolean;
   deletedAt: Date;
   slug: string;
+}
+
+interface IOrderShipping {
+  order_id: string;
+  shipName: string;
+  shipPhone: string;
+  save?(): Promise<IOrderShipping>;
 }
 
 // [GET] /admin/order
@@ -69,6 +79,29 @@ export const index = async (req: Request, res: Response) => {
   }
 
   res.render("admin/pages/orders/index", {
-    orders,
+    orders: orders.reverse(),
   });
+};
+
+// [POST] /admin/order/process-shipping
+export const orderShipping = async (req: Request, res: Response) => {
+  try {
+    const order = await Order.findOne({ _id: req.body.order_id });
+    if (!order) {
+      req.flash("error", "Đơn hàng không tồn tại");
+      res.redirect("back");
+      return;
+    }
+
+    await Order.updateOne({ _id: req.body.order_id }, { status: "shipping" });
+
+    const shipperInfo = new OrderShipping(req.body) as IOrderShipping;
+    await shipperInfo.save();
+
+    req.flash("success", "Đơn hàng đã được gửi");
+    res.redirect("back");
+  } catch (error) {
+    req.flash("error", "Có lỗi xảy ra");
+    res.redirect("back");
+  }
 };

@@ -25,6 +25,7 @@ const orderSchema = new mongoose_1.default.Schema({
         type: Boolean,
         default: false,
     },
+    status: String,
 }, {
     timestamps: true,
 });

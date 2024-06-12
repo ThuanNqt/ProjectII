@@ -28,4 +28,5 @@ const express_1 = require("express");
 const router = (0, express_1.Router)();
 const controller = __importStar(require("../../controllers/admin/order.controller"));
 router.get("/", controller.index);
+router.post("/process-shipping", controller.orderShipping);
 exports.orderRoutes = router;

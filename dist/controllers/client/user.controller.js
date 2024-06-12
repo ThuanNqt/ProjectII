@@ -22,6 +22,7 @@ const generate_1 = require("../../helpers/generate");
 const order_model_1 = __importDefault(require("../../models/order.model"));
 const product_model_1 = __importDefault(require("../../models/product.model"));
 const order_rating_model_1 = __importDefault(require("../../models/order-rating.model"));
+const order_shipping_model_1 = __importDefault(require("../../models/order-shipping.model"));
 const register = (req, res) => {
     res.render("client/pages/user/register", {
         pageTitle: "Đăng ký tài khoản",
@@ -123,10 +124,16 @@ const info = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
         order.totalPriceOrder = totalPriceOrder;
         order.totalQuantityOfOrder = totalQuantityOfOrder;
+        order.infoShipper = yield order_shipping_model_1.default.findOne({
+            order_id: order.id,
+        })
+            .select("shipName shipPhone")
+            .sort({ createdAt: -1 })
+            .limit(1);
     }
     res.render("client/pages/user/infoUser", {
         pageTitle: "Thông tin tài khoản",
-        orders: orders,
+        orders: orders.reverse(),
     });
 });
 exports.info = info;
@@ -341,7 +348,7 @@ const orderCancelDelete = (req, res) => __awaiter(void 0, void 0, void 0, functi
             res.redirect("back");
             return;
         }
-        yield order_model_1.default.updateOne({ _id: req.params.order_id }, { deleted: true });
+        yield order_model_1.default.updateOne({ _id: req.params.order_id }, { deleted: true, status: "cancel" });
         for (const product of order.products) {
             const productInfo = yield product_model_1.default.findOne({
                 _id: product.product_id,

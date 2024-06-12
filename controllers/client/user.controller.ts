@@ -9,6 +9,7 @@ import { generateRandomNumber } from "../../helpers/generate";
 import Order from "../../models/order.model";
 import Product from "../../models/product.model";
 import OrderRating from "../../models/order-rating.model";
+import OrderShipping from "../../models/order-shipping.model";
 
 interface IForgotPassword {
   email: string;
@@ -69,6 +70,11 @@ interface IOrder {
   totalPriceOrder?: number;
   paymentType?: string;
   payment?: boolean;
+  status?: string;
+  infoShipper?: {
+    shipName?: string;
+    shipPhone?: string;
+  };
 }
 
 interface IOrderRating {
@@ -200,10 +206,17 @@ export const info = async (req: Request, res: Response) => {
     }
     order.totalPriceOrder = totalPriceOrder;
     order.totalQuantityOfOrder = totalQuantityOfOrder;
+
+    order.infoShipper = await OrderShipping.findOne({
+      order_id: order.id,
+    })
+      .select("shipName shipPhone")
+      .sort({ createdAt: -1 })
+      .limit(1);
   }
   res.render("client/pages/user/infoUser", {
     pageTitle: "Thông tin tài khoản",
-    orders: orders,
+    orders: orders.reverse(),
   });
 };
 
@@ -456,7 +469,10 @@ export const orderCancelDelete = async (req: Request, res: Response) => {
       return;
     }
 
-    await Order.updateOne({ _id: req.params.order_id }, { deleted: true });
+    await Order.updateOne(
+      { _id: req.params.order_id },
+      { deleted: true, status: "cancel" }
+    );
 
     // Tăng lại số lượng products đã thay đổi
     for (const product of order.products) {
