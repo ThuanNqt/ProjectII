@@ -8,6 +8,7 @@ import { userRoutes } from "./user.route";
 import { category } from "../../middlewares/client/category.middleware";
 import { cartId } from "../../middlewares/client/cart.middleware";
 import { infoUser } from "../../middlewares/client/user.middleware";
+import { chatRoutes } from "./chat.route";
 
 export default (app: Express): void => {
   app.use(category); //Luôn luôn gọi mới middleware trước khi gọi route
@@ -19,4 +20,5 @@ export default (app: Express): void => {
   app.use("/cart", cartRoutes);
   app.use("/checkout", checkoutRoutes);
   app.use("/user", userRoutes);
+  app.use("/chat", chatRoutes);
 };

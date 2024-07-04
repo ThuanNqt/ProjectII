@@ -32,8 +32,8 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const newProductsNew = (0, product_1.priceNewProducts)(productsNew);
     res.render("client/pages/home/index", {
         pageTitle: "Trang chủ",
-        productsFeatured: newProductsFeatured,
-        productsNew: newProductsNew,
+        productsFeatured: newProductsFeatured.reverse(),
+        productsNew: newProductsNew.reverse(),
     });
 });
 exports.index = index;

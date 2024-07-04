@@ -9,6 +9,7 @@ const user_route_1 = require("./user.route");
 const category_middleware_1 = require("../../middlewares/client/category.middleware");
 const cart_middleware_1 = require("../../middlewares/client/cart.middleware");
 const user_middleware_1 = require("../../middlewares/client/user.middleware");
+const chat_route_1 = require("./chat.route");
 exports.default = (app) => {
     app.use(category_middleware_1.category);
     app.use(user_middleware_1.infoUser);
@@ -19,4 +20,5 @@ exports.default = (app) => {
     app.use("/cart", cart_route_1.cartRoutes);
     app.use("/checkout", checkout_route_1.checkoutRoutes);
     app.use("/user", user_route_1.userRoutes);
+    app.use("/chat", chat_route_1.chatRoutes);
 };

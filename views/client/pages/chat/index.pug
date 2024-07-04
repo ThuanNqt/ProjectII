@@ -1,0 +1,27 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main
+  .container.my-5
+    .row
+      .col-12
+        +box-head("Chat")
+    .row
+      .col-12
+        .chat
+          .inner-body
+            .inner-incoming
+              .inner-name Em yeu
+              .inner-content Hello Anh
+            .inner-outgoing
+              .inner-content Chao em
+          .inner-foot
+            form(
+              class="inner-form"
+              action=""
+            )
+              input(type="text" placeholder="Nhập nội dung..." name="content")
+              button
+                i.fa-regular.fa-paper-plane
+
+
