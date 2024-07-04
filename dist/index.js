@@ -39,6 +39,8 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const express_session_1 = __importDefault(require("express-session"));
 const moment_1 = __importDefault(require("moment"));
 const formatMoney_1 = require("./helpers/formatMoney");
+const socket_io_1 = require("socket.io");
+const node_http_1 = require("node:http");
 const port = process.env.PORT || 3000;
 const app = (0, express_1.default)();
 const path = require("path");
@@ -60,6 +62,9 @@ database.connect();
 app.set("views", "./views");
 app.set("view engine", "pug");
 app.use(express_1.default.static("public"));
+const server = (0, node_http_1.createServer)(app);
+const io = new socket_io_1.Server(server);
+global._io = io;
 (0, index_route_1.default)(app);
 (0, index_route_2.default)(app);
 app.get("*", (req, res) => {
@@ -67,6 +72,6 @@ app.get("*", (req, res) => {
         pageTitle: "404 Not Found",
     });
 });
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`App listening on port ${port}`);
 });

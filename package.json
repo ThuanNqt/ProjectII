@@ -46,6 +46,7 @@
     "qs": "^6.12.1",
     "regex": "^0.1.1",
     "shortid": "^2.2.16",
+    "socket.io": "^4.7.5",
     "streamifier": "^0.1.1",
     "sweetalert2": "^11.10.7",
     "tinymce": "^7.0.1"

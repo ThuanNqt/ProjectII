@@ -12,6 +12,8 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 import moment from "moment";
 import { formatMoney } from "./helpers/formatMoney";
+import { Server } from "socket.io";
+import { createServer } from "node:http";
 
 const port: number | string = process.env.PORT || 3000;
 const app: Express = express();
@@ -56,6 +58,11 @@ app.set("view engine", "pug");
 //config static files
 app.use(express.static("public"));
 
+// Socket.io
+const server = createServer(app);
+const io = new Server(server);
+global._io = io;
+
 //Routes
 route(app);
 routeAdmin(app);
@@ -66,6 +73,6 @@ app.get("*", (req: Request, res: Response) => {
   });
 });
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`App listening on port ${port}`);
 });
