@@ -17,6 +17,7 @@ const chat_model_1 = __importDefault(require("../../models/chat.model"));
 const user_model_1 = __importDefault(require("../../models/user.model"));
 const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = res.locals.user.id;
+    const fullName = res.locals.user.fullName;
     if (global._io) {
         global._io.once("connection", (socket) => {
             socket.on("CLIENT_SEND_MESSAGE", (content) => __awaiter(void 0, void 0, void 0, function* () {
@@ -25,6 +26,11 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                     content: content,
                 });
                 yield chat.save();
+                global._io.emit("SERVER_RETURN_MESSAGE", {
+                    userId: userId,
+                    fullName: fullName,
+                    content: content,
+                });
             }));
         });
     }

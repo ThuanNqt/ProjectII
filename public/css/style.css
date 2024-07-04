@@ -831,10 +831,16 @@ button[range-price]:hover {
 
 .inner-incoming {
   justify-content: flex-start;
+  flex-direction: column;
+}
+
+.inner-incoming .inner-name {
+  color: #333;
+  font-size: 13px;
 }
 
 .inner-incoming .inner-content {
-  background-color: #e1ffc7;
+  background-color: #e5e8e3;
   color: #333;
 }
 
@@ -843,8 +849,8 @@ button[range-price]:hover {
 }
 
 .inner-outgoing .inner-content {
-  background-color: #dcf8c6;
-  color: #333;
+  background-color: #067aff;
+  color: #fff;
 }
 
 .inner-content {

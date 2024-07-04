@@ -16,6 +16,7 @@ interface Chat {
 // [GET] /chat
 export const index = async (req: Request, res: Response) => {
   const userId: string = res.locals.user.id;
+  const fullName: string = res.locals.user.fullName;
 
   if (global._io) {
     global._io.once("connection", (socket) => {
@@ -27,6 +28,13 @@ export const index = async (req: Request, res: Response) => {
         });
 
         await chat.save();
+
+        // send data to Client
+        global._io.emit("SERVER_RETURN_MESSAGE", {
+          userId: userId,
+          fullName: fullName,
+          content: content,
+        });
       });
     });
   }

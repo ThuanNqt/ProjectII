@@ -8,16 +8,13 @@ block main
         +box-head("Chat")
     .row
       .col-12
-        .chat
+        .chat(my-id=user.id)
           .inner-body
             each chat in chats
-              if(chat.user_id === user.id)
-                .inner-outgoing
-                  .inner-content #{chat.content}
-              else
-                .inner-incoming
+              div(class=(chat.user_id === user.id ? "inner-outgoing" : "inner-incoming"))
+                if(chat.user_id !== user.id)
                   .inner-name #{chat.infoUser}
-                  .inner-content #{chat.content}
+                .inner-content #{chat.content}
           .inner-foot
             form(
               class="inner-form"
