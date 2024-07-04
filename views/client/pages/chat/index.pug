@@ -10,11 +10,14 @@ block main
       .col-12
         .chat
           .inner-body
-            .inner-incoming
-              .inner-name Em yeu
-              .inner-content Hello Anh
-            .inner-outgoing
-              .inner-content Chao em
+            each chat in chats
+              if(chat.user_id === user.id)
+                .inner-outgoing
+                  .inner-content #{chat.content}
+              else
+                .inner-incoming
+                  .inner-name #{chat.infoUser}
+                  .inner-content #{chat.content}
           .inner-foot
             form(
               class="inner-form"
