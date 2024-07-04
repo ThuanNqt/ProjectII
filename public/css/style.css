@@ -892,6 +892,11 @@ button[range-price]:hover {
   outline: none;
 }
 
+.inner-form .button-icon i {
+  font-size: 20px;
+  color: orange;
+}
+
 .inner-form button i {
   font-size: 16px;
 }
@@ -900,3 +905,13 @@ button[range-price]:hover {
   background-color: #0056b3;
 }
 /* End chat*/
+
+/* Emoji picker */
+.tooltip {
+  visibility: hidden;
+}
+.tooltip.shown {
+  visibility: visible;
+  opacity: 1;
+}
+/* End emoji picker */
