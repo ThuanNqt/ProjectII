@@ -32,6 +32,13 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                     content: content,
                 });
             }));
+            socket.on("CLIENT_SEND_TYPING", (type) => {
+                socket.broadcast.emit("SERVER_RETURN_TYPING", {
+                    userId: userId,
+                    fullName: fullName,
+                    type: type,
+                });
+            });
         });
     }
     const chats = (yield chat_model_1.default.find({
